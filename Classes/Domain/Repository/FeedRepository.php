@@ -54,7 +54,7 @@ class FeedRepository extends Repository
     /**
      * Default query settings
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         $defaultQuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
 
@@ -73,8 +73,6 @@ class FeedRepository extends Repository
     /**
      * Finds all feed items for configuration that were not listed in object storage
      *
-     * @param ObjectStorage $storage
-     * @param Configuration $configuration
      * @return QueryResultInterface<Feed>
      */
     public function findNotInStorage(ObjectStorage $storage, Configuration $configuration)
@@ -94,15 +92,13 @@ class FeedRepository extends Repository
     /**
      * Get feeds by configurations
      *
-     * @param array $configurations
-     * @param int $limit
      * @return QueryResult<Feed>
      */
     public function findByConfigurations(array $configurations, int $limit = 0)
     {
         $query = $this->createQuery();
 
-        if (!empty($configurations)) {
+        if ($configurations !== []) {
             $query->matching(
                 $query->in(
                     'configuration',
@@ -120,10 +116,6 @@ class FeedRepository extends Repository
 
     /**
      * Get feed by specific storage Pid and external identifier
-     *
-     * @param string $externalIdentifier
-     * @param int $pid
-     * @return Feed|null
      */
     public function findOneByExternalIdentifier(string $externalIdentifier, int $pid): ?Feed
     {

@@ -37,9 +37,6 @@ class SchedulerUtility
 {
     /**
      * Generate html box
-     *
-     * @param array $selectedConfigurations
-     * @return string
      */
     public static function getAvailableConfigurationsSelectBox(array $selectedConfigurations): string
     {
@@ -52,9 +49,9 @@ class SchedulerUtility
                 'tx_pxasocialfeed_domain_model_configuration'
             );
 
-        while ($config = $statement->fetch()) {
+        while ($config = $statement->fetchAssociative()) {
             $selectedAttribute = '';
-            if (is_array($selectedConfigurations) && in_array($config['uid'], $selectedConfigurations)) {
+            if (in_array($config['uid'], $selectedConfigurations)) {
                 $selectedAttribute = ' selected="selected"';
             }
 
@@ -66,16 +63,9 @@ class SchedulerUtility
             );
         }
 
-        $selector .= '</select>';
-
-        return $selector;
+        return $selector . '</select>';
     }
 
-    /**
-     * @param array $configurations
-     * @param bool $runAllConfigurations
-     * @return string
-     */
     public static function getSelectedConfigurationsInfo(array $configurations, bool $runAllConfigurations): string
     {
         if ($runAllConfigurations) {

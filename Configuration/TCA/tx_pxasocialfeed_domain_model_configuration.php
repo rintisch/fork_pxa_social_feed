@@ -1,8 +1,8 @@
 <?php
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
-return (function () {
+return (function (): array {
     $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_config';
     $accessTab = ', --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden, be_group';
 
@@ -90,17 +90,15 @@ return (function () {
                 'exclude' => 1,
                 'label' => $ll . '.max_items',
                 'config' => [
-                    'type' => 'input',
+                    'type' => 'number',
                     'size' => 30,
-                    'eval' => 'int',
                 ],
             ],
             'storage' => [
                 'exclude' => 1,
                 'label' => $ll . '.storage',
                 'config' => [
-                    'type' => 'input',
-                    'eval' => 'int',
+                    'type' => 'number',
                     'required' => true,
                 ],
             ],

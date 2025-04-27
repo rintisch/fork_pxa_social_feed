@@ -31,8 +31,6 @@ class InstagramSource extends BaseFacebookSource
 
     /**
      * Fetch instagram ID
-     *
-     * @return string
      */
     protected function getInstagramId(): string
     {
@@ -45,7 +43,7 @@ class InstagramSource extends BaseFacebookSource
                 '&access_token=' . $access_token
             );
             $responseBody = json_decode($response, true);
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             throw new \UnexpectedValueException(
                 'Could not get instagram business account ID for page with ID ' . $pageId . '. Check you settings.',
                 1562841411121
@@ -64,8 +62,6 @@ class InstagramSource extends BaseFacebookSource
 
     /**
      * Return fields for endpoint request
-     *
-     * @return array
      */
     protected function getEndPointFields(): array
     {

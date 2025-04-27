@@ -47,11 +47,8 @@ class PageLayoutView
 
     /**
      * Generate plugin BE preview info
-     *
-     * @param array $params
-     * @return string
      */
-    public function getExtensionInformation($params): string
+    public function getExtensionInformation(array $params): string
     {
         if ($params['row']['list_type'] == 'pxasocialfeed_showfeed') {
             $view = $this->getView();
@@ -86,7 +83,7 @@ class PageLayoutView
                 }
             }
 
-            $view->assignMultiple(compact('settings', 'configurations'));
+            $view->assignMultiple(['settings' => $settings, 'configurations' => $configurations]);
 
             return $view->render();
         }
@@ -96,8 +93,6 @@ class PageLayoutView
 
     /**
      * Get view
-     *
-     * @return StandaloneView
      */
     protected function getView(): StandaloneView
     {
@@ -112,7 +107,7 @@ class PageLayoutView
     /**
      * @return FlexFormService
      */
-    protected function getFlexFormService()
+    protected function getFlexFormService(): object
     {
         return GeneralUtility::makeInstance(FlexFormService::class);
     }

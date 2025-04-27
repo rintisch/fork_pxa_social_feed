@@ -19,39 +19,33 @@ class FacebookFeedUpdater extends BaseUpdater
     {
     /**
      * Create/Update feed items
-     *
-     * @param FeedSourceInterface $source
      */
     public function update(FeedSourceInterface $source): void
     {
         $items = $source->load();
 
-        if (count($items) > 0) {
-            foreach ($items as $rawItem) {
-                $feedItem = $this->feedRepository->findOneByExternalIdentifier(
-                    $rawItem['id'],
-                    $source->getConfiguration()->getStorage()
-                );
-                if ($feedItem === null) {
-                    $feedItem = $this->createFeedItem($rawItem, $source->getConfiguration());
-                }
-
-                $this->updateFeedItem($feedItem, $rawItem);
+        foreach ($items as $rawItem) {
+            $feedItem = $this->feedRepository->findOneByExternalIdentifier(
+                $rawItem['id'],
+                $source->getConfiguration()->getStorage()
+            );
+            if ($feedItem === null) {
+                $feedItem = $this->createFeedItem($rawItem, $source->getConfiguration());
             }
+
+            $this->updateFeedItem($feedItem, $rawItem);
         }
     }
 
     /**
      * Update single facebook item
      *
-     * @param Feed $feedItem
-     * @param array $rawData
      * @param Configuration $configuration
      */
     protected function updateFeedItem(Feed $feedItem, array $rawData): void
     {
-        $updated = strtotime($rawData['updated_time']);
-        $feedUpdated = $feedItem->getUpdateDate() ? $feedItem->getUpdateDate()->getTimestamp() : 0;
+        $updated = strtotime((string) $rawData['updated_time']);
+        $feedUpdated = $feedItem->getUpdateDate() instanceof \DateTime ? $feedItem->getUpdateDate()->getTimestamp() : 0;
 
         if ($feedUpdated < $updated) {
             $this->setFacebookData($feedItem, $rawData);
@@ -67,9 +61,6 @@ class FacebookFeedUpdater extends BaseUpdater
 
     /**
      * Update facebook data
-     *
-     * @param Feed $feed
-     * @param array $rawData
      */
     protected function setFacebookData(Feed $feed, array $rawData): void
     {
@@ -96,8 +87,6 @@ class FacebookFeedUpdater extends BaseUpdater
     /**
      * Create new feed item
      *
-     * @param array $rawData
-     * @param Configuration $configuration
      * @return object|Feed
      */
     protected function createFeedItem(array $rawData, Configuration $configuration): Feed

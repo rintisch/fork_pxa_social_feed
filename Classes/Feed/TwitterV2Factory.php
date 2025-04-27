@@ -16,9 +16,6 @@ class TwitterV2Factory implements FeedFactoryInterface
 {
     /**
      * Feed source allow to fetch feed items
-     *
-     * @param Configuration $configuration
-     * @return TwitterV2Source
      */
     public function getFeedSource(Configuration $configuration): TwitterV2Source
     {
@@ -27,8 +24,6 @@ class TwitterV2Factory implements FeedFactoryInterface
 
     /**
      * Feed updater. Will create/update feed items
-     *
-     * @return TwitterV2FeedUpdater
      */
     public function getFeedUpdater(): TwitterV2FeedUpdater
     {

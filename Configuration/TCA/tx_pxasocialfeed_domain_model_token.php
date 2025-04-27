@@ -1,8 +1,8 @@
 <?php
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
-return (function () {
+return (function (): array {
     $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_tokens';
     $accessTab = ', --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden, be_group';
 

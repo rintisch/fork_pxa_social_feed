@@ -39,10 +39,7 @@ class ImportTaskAdditionalFieldProvider extends AbstractAdditionalFieldProvider
 {
     use AdditionalFieldProviderTrait;
     /**
-     * @param array $taskInfo
      * @param ImportTask $task
-     * @param SchedulerModuleController $parentObject
-     * @return array
      */
     public function getAdditionalFields(
         array &$taskInfo,
@@ -51,14 +48,14 @@ class ImportTaskAdditionalFieldProvider extends AbstractAdditionalFieldProvider
     ): array {
         $additionalFields = [];
 
-        if ($this->getAction($parentObject) == 'add') {
+        if ($this->getAction($parentObject) === 'add') {
             $taskInfo['pxasocialfeed_configs'] = null;
             $taskInfo['pxasocialfeed_receiver_email'] = '';
             $taskInfo['pxasocialfeed_sender_email'] = '';
             $taskInfo['pxasocialfeed_run_all_configs'] = false;
         }
 
-        if ($this->getAction($parentObject) == 'edit') {
+        if ($this->getAction($parentObject) === 'edit') {
             $taskInfo['pxasocialfeed_configs'] = $task->getConfigurations();
             $taskInfo['pxasocialfeed_receiver_email'] = $task->getReceiverEmail();
             $taskInfo['pxasocialfeed_sender_email'] = $task->getSenderEmail();
@@ -96,11 +93,7 @@ class ImportTaskAdditionalFieldProvider extends AbstractAdditionalFieldProvider
 
         return $additionalFields;
     }
-    /**
-     * @param array $submittedData
-     * @param SchedulerModuleController $parentObject
-     * @return bool
-     */
+
     public function validateAdditionalFields(
         array &$submittedData,
         SchedulerModuleController $parentObject
@@ -111,34 +104,31 @@ class ImportTaskAdditionalFieldProvider extends AbstractAdditionalFieldProvider
         if (!isset($submittedData['pxasocialfeed_run_all_configs'])
             && !isset($submittedData['pxasocialfeed_configs'])
         ) {
-            $this->addMessage('Wrong configurations select', AbstractMessage::ERROR);
+            $this->addMessage('Wrong configurations select', \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::ERROR);
         } elseif (!$this->isValidEmail($submittedData['pxasocialfeed_sender_email'])
             || !$this->isValidEmail($submittedData['pxasocialfeed_receiver_email'])
         ) {
-            $this->addMessage('Please provide a valid email address.', AbstractMessage::ERROR);
+            $this->addMessage('Please provide a valid email address.', \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::ERROR);
         } else {
             $valid = true;
         }
 
         return $valid;
     }
+
     /**
-     * @param array $submittedData
      * @param ImportTask $task
      */
-    public function saveAdditionalFields(array $submittedData, AbstractTask $task)
+    public function saveAdditionalFields(array $submittedData, AbstractTask $task): void
     {
         $task->setConfigurations($submittedData['pxasocialfeed_configs'] ?? []);
         $task->setReceiverEmail($submittedData['pxasocialfeed_receiver_email']);
         $task->setSenderEmail($submittedData['pxasocialfeed_sender_email']);
         $task->setRunAllConfigurations((bool)($submittedData['pxasocialfeed_run_all_configs'] ?? false));
     }
+
     /**
      * Input field code
-     *
-     * @param string $fieldName
-     * @param string $value
-     * @return string
      */
     protected function getInputField(string $fieldName, string $value): string
     {
@@ -149,14 +139,12 @@ class ImportTaskAdditionalFieldProvider extends AbstractAdditionalFieldProvider
             htmlspecialchars($value)
         );
     }
+
     /**
      * Validate email
-     *
-     * @param string $email
-     * @return bool
      */
     protected function isValidEmail(string $email): bool
     {
-        return empty($email) || GeneralUtility::validEmail($email);
+        return $email === '' || $email === '0' || GeneralUtility::validEmail($email);
     }
 }

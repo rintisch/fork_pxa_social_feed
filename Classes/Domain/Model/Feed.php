@@ -42,12 +42,12 @@ class Feed extends AbstractEntity
     /**
      * image media type
      */
-    public const IMAGE = 1;
+    public const int IMAGE = 1;
 
     /**
      * video media type
      */
-    public const VIDEO = 2;
+    public const int VIDEO = 2;
 
     /**
      * pid
@@ -56,75 +56,57 @@ class Feed extends AbstractEntity
 
     /**
      * updateDate
-     *
-     * @var \DateTime|null
      */
-    protected $updateDate;
+    protected ?\DateTime $updateDate = null;
 
     /**
      * externalIdentifier
-     *
-     * @var string
      */
-    protected $externalIdentifier = '';
+    protected string $externalIdentifier = '';
 
     /**
      * date
-     *
-     * @var \DateTime|null
      */
-    protected $postDate;
+    protected ?\DateTime $postDate = null;
 
     /**
      * postUrl
-     *
-     * @var string
      */
-    protected $postUrl = '';
+    protected string $postUrl = '';
 
     /**
      * message
-     *
-     * @var string
      */
-    protected $message = '';
+    protected string $message = '';
 
     /**
      * image
      *
      * @deprecated will be removed in a future version
-     * @var string
      */
-    protected $image = '';
+    protected string $image = '';
 
     /**
      * small image
      *
      * @deprecated will be removed in a future version
-     * @var string
      */
-    protected $smallImage = '';
+    protected string $smallImage = '';
 
     /**
      * likes
-     *
-     * @var int
      */
-    protected $likes = 0;
+    protected int $likes = 0;
 
     /**
      * title
-     *
-     * @var string
      */
-    protected $title = '';
+    protected string $title = '';
 
     /**
      * type
-     *
-     * @var int
      */
-    protected $type = 0;
+    protected int $type = 0;
 
     /**
      * token
@@ -163,7 +145,7 @@ class Feed extends AbstractEntity
      */
     public function initializeObject(): void
     {
-        $this->falMedia = $this->falMedia ?? new ObjectStorage();
+        $this->falMedia ??= new ObjectStorage();
     }
 
     /**
@@ -178,25 +160,17 @@ class Feed extends AbstractEntity
 
     /**
      * Sets the date
-     *
-     * @param \DateTime $postDate
      */
-    public function setPostDate(\DateTime $postDate)
+    public function setPostDate(\DateTime $postDate): void
     {
         $this->postDate = $postDate;
     }
 
-    /**
-     * @return string
-     */
     public function getPostUrl(): string
     {
         return $this->postUrl;
     }
 
-    /**
-     * @param string $postUrl
-     */
     public function setPostUrl(string $postUrl): void
     {
         $this->postUrl = $postUrl;
@@ -229,8 +203,6 @@ class Feed extends AbstractEntity
 
     /**
      * Sets the message
-     *
-     * @param string $message
      */
     public function setMessage(string $message): void
     {
@@ -252,7 +224,6 @@ class Feed extends AbstractEntity
      * Sets the image
      *
      * @deprecated will be removed in a future version
-     * @param string $image
      */
     public function setImage(string $image): void
     {
@@ -274,7 +245,6 @@ class Feed extends AbstractEntity
      * Sets the image
      *
      * @deprecated will be removed in a future version
-     * @param string $smallImage
      */
     public function setSmallImage(string $smallImage): void
     {
@@ -293,8 +263,6 @@ class Feed extends AbstractEntity
 
     /**
      * Sets the title
-     *
-     * @param string $title
      */
     public function setTitle(string $title): void
     {
@@ -320,71 +288,47 @@ class Feed extends AbstractEntity
      *
      * @param Configuration $configuration
      */
-    public function setConfiguration(?Configuration $configuration)
+    public function setConfiguration(?Configuration $configuration): void
     {
         $this->configuration = $configuration;
     }
 
-    /**
-     * @return string
-     */
     public function getExternalIdentifier(): string
     {
         return $this->externalIdentifier;
     }
 
-    /**
-     * @param string $externalIdentifier
-     */
-    public function setExternalIdentifier(string $externalIdentifier)
+    public function setExternalIdentifier(string $externalIdentifier): void
     {
         $this->externalIdentifier = $externalIdentifier;
     }
 
-    /**
-     * @return \DateTime|null
-     */
     public function getUpdateDate(): ?\DateTime
     {
         return $this->updateDate;
     }
 
-    /**
-     * @param \DateTime $updateDate
-     */
-    public function setUpdateDate(\DateTime $updateDate)
+    public function setUpdateDate(\DateTime $updateDate): void
     {
         $this->updateDate = $updateDate;
     }
 
-    /**
-     * @return int
-     */
     public function getLikes(): int
     {
         return $this->likes;
     }
 
-    /**
-     * @param int $likes
-     */
-    public function setLikes(int $likes)
+    public function setLikes(int $likes): void
     {
         $this->likes = $likes;
     }
 
-    /**
-     * @return int
-     */
     public function getType(): int
     {
         return $this->type;
     }
 
-    /**
-     * @param int $type
-     */
-    public function setType(int $type)
+    public function setType(int $type): void
     {
         $this->type = $type;
     }
@@ -401,10 +345,8 @@ class Feed extends AbstractEntity
 
     /**
      * Sets the mediaType
-     *
-     * @param int $mediaType
      */
-    public function setMediaType(int $mediaType)
+    public function setMediaType(int $mediaType): void
     {
         $this->mediaType = $mediaType;
     }
@@ -419,14 +361,8 @@ class Feed extends AbstractEntity
         if ($this->falMedia instanceof LazyLoadingProxy) {
             $this->falMedia->_loadRealInstance();
         }
-        if ($this->falMedia instanceof ObjectStorage) {
-            return $this->falMedia;
-        }
 
-        /** @var ObjectStorage<FileReference> */
-        $falMedia = new ObjectStorage();
-
-        return $this->falMedia = $falMedia;
+        return $this->falMedia;
     }
 
     /**
@@ -441,8 +377,6 @@ class Feed extends AbstractEntity
 
     /**
      * Add a Fal media file reference
-     *
-     * @param FileReference $falMedia
      */
     public function addFalMedia(FileReference $falMedia): void
     {

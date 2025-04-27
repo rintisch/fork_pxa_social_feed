@@ -6,15 +6,8 @@ namespace Pixelant\PxaSocialFeed\Event;
 
 final class BeforeUpdateFacebookFeedEvent
 {
-    private $feedItem;
-    private $rawData;
-    private $configuration;
-
-    public function __construct($feedItem, $rawData, $configuration)
+    public function __construct(private $feedItem, private $rawData, private $configuration)
     {
-        $this->feedItem      = $feedItem;
-        $this->rawData       = $rawData;
-        $this->configuration = $configuration;
     }
 
     public function getFeedItem()

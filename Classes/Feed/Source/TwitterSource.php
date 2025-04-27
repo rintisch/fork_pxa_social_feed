@@ -43,7 +43,7 @@ class TwitterSource extends BaseSource
 
         if (!is_array($data)) {
             throw new InvalidFeedSourceData(
-                "Twitter response doesn't appear to be a valid json. Response return '$body'.",
+                sprintf("Twitter response doesn't appear to be a valid json. Response return '%s'.", $body),
                 1562910457024
             );
         }
@@ -54,9 +54,6 @@ class TwitterSource extends BaseSource
     /**
      * Request twitter api
      *
-     * @param string $url
-     * @param string $autHeader
-     * @return ResponseInterface
      * @throws BadResponseException
      */
     protected function requestTwitterApi(string $url, string $autHeader): ResponseInterface
@@ -72,19 +69,14 @@ class TwitterSource extends BaseSource
 
     /**
      * Generate url for request
-     *
-     * @param string $endPoint
-     * @return string
      */
-    protected function generateEndPointUrl(string $endPoint)
+    protected function generateEndPointUrl(string $endPoint): string
     {
         return $this->getApiUrl() . $endPoint;
     }
 
     /**
      * Get API url
-     *
-     * @return string
      */
     protected function getApiUrl(): string
     {
@@ -93,8 +85,6 @@ class TwitterSource extends BaseSource
 
     /**
      * Query fields
-     *
-     * @return array
      */
     protected function getFields(): array
     {
@@ -117,10 +107,6 @@ class TwitterSource extends BaseSource
 
     /**
      * Get Authorization header
-     *
-     * @param string $url
-     * @param array $fields
-     * @return string
      */
     protected function getAuthHeader(string $url, array $fields): string
     {
@@ -146,27 +132,23 @@ class TwitterSource extends BaseSource
             $headerValues[] = $key . '="' . rawurlencode($value) . '"';
         }
 
-        $header .= implode(', ', $headerValues);
-
-        return $header;
+        return $header . implode(', ', $headerValues);
     }
 
     /**
      * Generate the base string
      *
-     * @param array $oauth
-     * @param string $url
      * @return string Built base string
      */
-    protected function buildSigBase(array $oauth, string $url)
+    protected function buildSigBase(array $oauth, string $url): string
     {
         ksort($oauth);
         $urlParts = [];
 
         foreach ($oauth as $key => $value) {
-            $urlParts[] = $key . '=' . rawurlencode($value);
+            $urlParts[] = $key . '=' . rawurlencode((string) $value);
         }
 
-        return 'GET' . '&' . rawurlencode($url) . '&' . rawurlencode(implode('&', $urlParts));
+        return 'GET&' . rawurlencode($url) . '&' . rawurlencode(implode('&', $urlParts));
     }
 }

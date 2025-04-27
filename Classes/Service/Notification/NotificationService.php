@@ -13,31 +13,12 @@ use TYPO3\CMS\Core\Utility\MailUtility;
  */
 class NotificationService
 {
-    /**
-     * @var string
-     */
-    protected $senderEmail = '';
-
-    /**
-     * @var string
-     */
-    protected $receiverEmail = '';
-
-    /**
-     * @param string $receiverEmail
-     * @param string $senderEmail
-     */
-    public function __construct(string $receiverEmail = '', string $senderEmail = '')
+    public function __construct(protected string $receiverEmail = '', protected string $senderEmail = '')
     {
-        $this->receiverEmail = $receiverEmail;
-        $this->senderEmail = $senderEmail;
     }
 
     /**
      * Notify by email
-     *
-     * @param string $subject
-     * @param string $message
      */
     public function notify(string $subject, string $message): void
     {
@@ -51,8 +32,6 @@ class NotificationService
 
     /**
      * Check if can send an email
-     *
-     * @return bool
      */
     public function canSendEmail(): bool
     {
@@ -61,8 +40,6 @@ class NotificationService
 
     /**
      * Prepare mailer
-     *
-     * @return MailMessage
      */
     protected function getMailer(): MailMessage
     {
@@ -75,33 +52,21 @@ class NotificationService
         return $mail;
     }
 
-    /**
-     * @return string
-     */
     public function getSenderEmail(): string
     {
         return $this->senderEmail;
     }
 
-    /**
-     * @param string $senderEmail
-     */
     public function setSenderEmail(string $senderEmail): void
     {
         $this->senderEmail = $senderEmail;
     }
 
-    /**
-     * @return string
-     */
     public function getReceiverEmail(): string
     {
         return $this->receiverEmail;
     }
 
-    /**
-     * @param string $receiverEmail
-     */
     public function setReceiverEmail(string $receiverEmail): void
     {
         $this->receiverEmail = $receiverEmail;

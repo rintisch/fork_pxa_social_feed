@@ -41,58 +41,36 @@ class Configuration extends AbstractEntity
 {
     /**
      * Default PID
-     *
-     * @var int
      */
     protected ?int $pid = 0;
 
     /**
      * hidden
-     *
-     * @var bool
      */
-    protected $hidden = false;
+    protected bool $hidden = false;
 
     /**
      * clear
-     *
-     * @var bool
      */
-    protected $performCleanUp = true;
+    protected bool $performCleanUp = true;
 
     /**
      * name
-     *
-     * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * image size
-     *
-     * @var string
      */
-    protected $imageSize = 'normal_images';
+    protected string $imageSize = 'normal_images';
 
-    /**
-     * @var string
-     */
-    protected $socialId = '';
+    protected string $socialId = '';
 
-    /**
-     * @var string
-     */
-    protected $endPointEntry = '';
+    protected string $endPointEntry = '';
 
-    /**
-     * @var int
-     */
-    protected $maxItems = 0;
+    protected int $maxItems = 0;
 
-    /**
-     * @var int
-     */
-    protected $storage = 0;
+    protected int $storage = 0;
 
     /**
      * @var Token
@@ -114,17 +92,11 @@ class Configuration extends AbstractEntity
         $this->beGroup = new ObjectStorage();
     }
 
-    /**
-     * @return bool
-     */
     public function isHidden(): bool
     {
         return $this->hidden;
     }
 
-    /**
-     * @param bool $hidden
-     */
     public function setHidden(bool $hidden): void
     {
         $this->hidden = $hidden;
@@ -146,9 +118,6 @@ class Configuration extends AbstractEntity
         $this->beGroup = $beGroup;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
@@ -159,41 +128,26 @@ class Configuration extends AbstractEntity
         return $this->imageSize;
     }
 
-    /**
-     * @return string
-     */
     public function getSocialId(): string
     {
         return $this->socialId;
     }
 
-    /**
-     * @param string $socialId
-     */
     public function setSocialId(string $socialId): void
     {
         $this->socialId = $socialId;
     }
 
-    /**
-     * @return string
-     */
     public function getEndPointEntry(): string
     {
         return $this->endPointEntry;
     }
 
-    /**
-     * @param string $endPointEntry
-     */
     public function setEndPointEntry(string $endPointEntry): void
     {
         $this->endPointEntry = $endPointEntry;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name): void
     {
         $this->name = $name;
@@ -204,9 +158,6 @@ class Configuration extends AbstractEntity
         $this->imageSize = $imageSize;
     }
 
-    /**
-     * @return int
-     */
     public function getMaxItems(): int
     {
         return $this->maxItems;
@@ -220,9 +171,6 @@ class Configuration extends AbstractEntity
         $this->maxItems = $maxItems ?? 0;
     }
 
-    /**
-     * @return int
-     */
     public function getStorage(): int
     {
         return $this->storage;
@@ -244,12 +192,10 @@ class Configuration extends AbstractEntity
         if ($this->token instanceof LazyLoadingProxy) {
             $this->token->_loadRealInstance();
         }
+
         return $this->token;
     }
 
-    /**
-     * @param Token $token
-     */
     public function setToken(Token $token): void
     {
         $this->token = $token;
@@ -271,17 +217,11 @@ class Configuration extends AbstractEntity
         return is_array($raw) ? $raw['title'] : '';
     }
 
-    /**
-     * @param bool $performCleanUp
-     */
     public function setPerformCleanUp(bool $performCleanUp): void
     {
         $this->performCleanUp = $performCleanUp;
     }
 
-    /**
-    * @return bool
-    */
     public function getPerformCleanUp(): bool
     {
         return $this->performCleanUp;

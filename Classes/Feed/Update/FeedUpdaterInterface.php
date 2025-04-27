@@ -14,8 +14,6 @@ interface FeedUpdaterInterface
 {
     /**
      * Create/Update feed items
-     *
-     * @param FeedSourceInterface $source
      */
     public function update(FeedSourceInterface $source): void;
 

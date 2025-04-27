@@ -6,11 +6,8 @@ namespace Pixelant\PxaSocialFeed\Event;
 
 final class FacebookEndPointEvent
 {
-    private $endPoint;
-
-    public function __construct($endPoint)
+    public function __construct(private $endPoint)
     {
-        $this->endPoint = $endPoint;
     }
 
     /**
@@ -21,11 +18,7 @@ final class FacebookEndPointEvent
         return $this->endPoint;
     }
 
-    /**
-     * @param mixed $endPoint
-     * @return self
-     */
-    public function setEndPoint($endPoint): self
+    public function setEndPoint(mixed $endPoint): self
     {
         $this->endPoint = $endPoint;
         return $this;

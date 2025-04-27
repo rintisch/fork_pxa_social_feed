@@ -42,7 +42,7 @@ class BackendGroupRestriction implements QueryRestrictionInterface
     {
         $constraints = [];
         if ($this->backendUserAuth !== null && !$this->backendUserAuth->isAdmin()) {
-            foreach ($queriedTables as $tableAlias => $tableName) {
+            foreach (array_keys($queriedTables) as $tableAlias) {
                 $fieldName = $tableAlias . '.' . $this->groupFieldName;
                 // Allow records where no group access has been configured (field values NULL, 0 or empty string)
                 $constraints = [

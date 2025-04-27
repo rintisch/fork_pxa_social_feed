@@ -32,21 +32,20 @@ class ImportFeedsTaskService
      * feeds repository
      * @var ConfigurationRepository
      */
-    protected $configurationRepository;
+    protected object $configurationRepository;
 
     /**
      * @var NotificationService
      */
-    protected $notificationService;
+    protected object $notificationService;
 
     /**
      * @var PersistenceManager
      */
-    protected $persistenceManager;
+    protected object $persistenceManager;
 
     /**
      * TaskUtility constructor.
-     * @param NotificationService $notificationService
      */
     public function __construct(NotificationService $notificationService = null)
     {
@@ -59,10 +58,6 @@ class ImportFeedsTaskService
 
     /**
      * Import logic
-     *
-     * @param array $configurationUids
-     * @param bool $runAllConfigurations
-     * @return bool
      */
     public function import(array $configurationUids, bool $runAllConfigurations = false): bool
     {
@@ -76,6 +71,7 @@ class ImportFeedsTaskService
             if ($configuration->isHidden()) {
                 continue;
             }
+
             if (null == $token = $configuration->getToken()) {
                 continue;
             }
@@ -109,9 +105,6 @@ class ImportFeedsTaskService
 
     /**
      * Update feed configuration
-     *
-     * @param FeedFactoryInterface $feedFactory
-     * @param Configuration $configuration
      */
     protected function importFeed(FeedFactoryInterface $feedFactory, Configuration $configuration): void
     {
@@ -132,9 +125,6 @@ class ImportFeedsTaskService
         $updater->persist();
     }
 
-    /**
-     * @param Token $token
-     */
     protected function getFactory(Token $token): FeedFactoryInterface
     {
         switch (true) {
@@ -162,7 +152,7 @@ class ImportFeedsTaskService
 
             default:
                 throw new UnsupportedTokenType(
-                    "Token type '{$token->getType()}' is not supported",
+                    sprintf("Token type '%d' is not supported", $token->getType()),
                     1562837370194
                 );
         }
@@ -170,8 +160,6 @@ class ImportFeedsTaskService
 
     /**
      * Check if facebook token expire, send notification if yes
-     *
-     * @param Token $token
      */
     protected function checkFacebookAccessToken(Token $token): void
     {
@@ -200,9 +188,6 @@ class ImportFeedsTaskService
 
     /**
      * Disable a configuration, if feature enabled
-     *
-     * @param Configuration $configuration
-     * @param int $httpErrorCode
      */
     protected function disableConfiguration(Configuration $configuration, int $httpErrorCode): void
     {
@@ -210,6 +195,7 @@ class ImportFeedsTaskService
         if (!($extConf['disableConfigurationOnFailure'] ?? false)) {
             return;
         }
+
         $codes = GeneralUtility::intExplode(
             ',',
             $extConf['disableConfigurationOnFailureErrorCodes'] ?? '',

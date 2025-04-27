@@ -15,13 +15,11 @@ class LoggerUtility
      * Message type
      */
     public const INFO = 0;
+
     public const ERROR = 1;
 
     /**
      * Log error
-     *
-     * @param string $message
-     * @param int $type
      */
     public static function log(string $message, int $type = self::INFO): void
     {

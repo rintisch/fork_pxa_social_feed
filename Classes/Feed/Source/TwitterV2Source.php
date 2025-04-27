@@ -49,7 +49,7 @@ class TwitterV2Source extends BaseSource
 
         if (!is_array($data)) {
             throw new InvalidFeedSourceData(
-                "Twitter v2 response doesn't appear to be a valid json. Response return '$body'.",
+                sprintf("Twitter v2 response doesn't appear to be a valid json. Response return '%s'.", $body),
                 1684850941
             );
         }
@@ -60,9 +60,6 @@ class TwitterV2Source extends BaseSource
     /**
      * Request twitter api
      *
-     * @param string $url
-     * @param string $autHeader
-     * @return ResponseInterface
      * @throws BadResponseException
      */
     protected function requestTwitterApi(string $url, string $autHeader): ResponseInterface
@@ -79,16 +76,14 @@ class TwitterV2Source extends BaseSource
     /**
      * Generate url for request
      *
-     * @param string $endPoint
-     * @param array $pathVariables
      * @return string
      */
-    protected function generateEndPointUrl(string $endPoint, array $pathVariables = [])
+    protected function generateEndPointUrl(string $endPoint, array $pathVariables = []): string|array
     {
         $url = $this->getApiUrl() . $endPoint;
 
         foreach ($pathVariables as $key => $value) {
-            $url = str_replace($key, rawurlencode($value), $url);
+            $url = str_replace($key, rawurlencode((string) $value), $url);
         }
 
         return $url;
@@ -96,8 +91,6 @@ class TwitterV2Source extends BaseSource
 
     /**
      * Get API url
-     *
-     * @return string
      */
     protected function getApiUrl(): string
     {
@@ -106,8 +99,6 @@ class TwitterV2Source extends BaseSource
 
     /**
      * Query fields
-     *
-     * @return array
      */
     protected function getFields(): array
     {
@@ -130,8 +121,6 @@ class TwitterV2Source extends BaseSource
 
     /**
      * Get Authorization header
-     *
-     * @return string
      */
     protected function getAuthHeader(): string
     {

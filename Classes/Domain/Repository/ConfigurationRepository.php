@@ -47,7 +47,6 @@ class ConfigurationRepository extends AbstractBackendRepository
     /**
      * Find by uids list
      *
-     * @param array $configurations
      * @return QueryResultInterface<Configuration>
      */
     public function findByUids(array $configurations): QueryResultInterface
@@ -62,7 +61,6 @@ class ConfigurationRepository extends AbstractBackendRepository
     /**
      * Get configurations by token
      *
-     * @param Token $token
      * @return QueryResultInterface<Configuration>
      */
     public function findConfigurationByToken(Token $token): QueryResultInterface

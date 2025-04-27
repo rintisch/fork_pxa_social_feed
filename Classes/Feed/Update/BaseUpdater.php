@@ -41,19 +41,19 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     /**
      * @var FeedRepository
      */
-    protected $feedRepository;
+    protected object $feedRepository;
 
     /**
      * Keep all processed feed items
      *
      * @var ObjectStorage<Feed>
      */
-    protected $feeds;
+    protected \TYPO3\CMS\Extbase\Persistence\ObjectStorage $feeds;
 
     /**
      * @var MimeTypeDetector
      */
-    protected $mimeTypeDetector;
+    protected object $mimeTypeDetector;
 
     /**
      * BaseUpdater constructor.
@@ -75,8 +75,6 @@ abstract class BaseUpdater implements FeedUpdaterInterface
 
     /**
      * Clean all outdated records
-     *
-     * @param Configuration $configuration
      */
     public function cleanUp(Configuration $configuration): void
     {
@@ -94,8 +92,6 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     /**
      * Add or update feed object.
      * Save all processed items
-     *
-     * @param Feed $feed
      */
     protected function addOrUpdateFeedItem(Feed $feed): void
     {
@@ -134,7 +130,6 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      * @TODO is there better way to do this ?
      *
      * @param $message
-     * @return string
      */
     protected function encodeMessage(string $message): string
     {
@@ -142,9 +137,6 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     }
 
     /**
-     * @param string $url
-     * @param Feed $feed
-     * @return FileReference|null
      * @throws UnknownClassException
      * @throws NoSuchPropertyException
      * @throws InvalidArgumentException
@@ -162,12 +154,12 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     protected function storeImg(string $url, Feed $feed): ?FileReference
     {
         $extbaseFileReference = null;
-        if (empty($url)) {
+        if ($url === '' || $url === '0') {
             return $extbaseFileReference;
         }
 
         $imageFile = $this->downloadImage($url, $feed->getConfiguration());
-        if ($imageFile) {
+        if ($imageFile instanceof \TYPO3\CMS\Core\Resource\File) {
             $extbaseFileReference = GeneralUtility::makeInstance(FileReference::class);
             $extbaseFileReference->setOriginalFile($imageFile);
         }
@@ -176,9 +168,6 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     }
 
     /**
-     * @param string $url
-     * @param Configuration $configuration
-     * @return File|null
      * @throws InvalidArgumentException
      * @throws Exception
      * @throws DriverException

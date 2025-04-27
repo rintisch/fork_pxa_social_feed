@@ -20,8 +20,6 @@ interface FeedSourceInterface
 
     /**
      * Return source configuration
-
-     * @return Configuration
      */
     public function getConfiguration(): Configuration;
 }

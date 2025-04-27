@@ -17,7 +17,6 @@ class ConfigurationUtility
     /**
      * Get extension configuration
      *
-     * @return array
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
@@ -28,9 +27,6 @@ class ConfigurationUtility
 
     /**
      * Check if feature is enabled in configuration
-     *
-     * @param string $feature
-     * @return bool
      */
     public static function isFeatureEnabled(string $feature): bool
     {

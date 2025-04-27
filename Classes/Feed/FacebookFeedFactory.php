@@ -16,9 +16,6 @@ class FacebookFeedFactory implements FeedFactoryInterface
 {
     /**
      * Feed source allow to fetch feed items
-     *
-     * @param Configuration $configuration
-     * @return FacebookSource
      */
     public function getFeedSource(Configuration $configuration): FacebookSource
     {
@@ -27,8 +24,6 @@ class FacebookFeedFactory implements FeedFactoryInterface
 
     /**
      * Feed updater. Will create/update feed items
-     *
-     * @return FacebookFeedUpdater
      */
     public function getFeedUpdater(): FacebookFeedUpdater
     {

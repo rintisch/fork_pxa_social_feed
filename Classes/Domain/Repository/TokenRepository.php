@@ -48,8 +48,6 @@ class TokenRepository extends AbstractBackendRepository
     /**
      * Finds a facebook page token based on the parent token (user token) and the social id.
      *
-     * @param Token  $token
-     * @param string $fbSocialId
      *
      * @return QueryResultInterface<QueryResult>
      */
@@ -89,9 +87,6 @@ class TokenRepository extends AbstractBackendRepository
         ;
     }
 
-    /**
-     * @param int $tokenUid
-     */
     public function removeAllPageTokensByParentToken(int $tokenUid): void
     {
         GeneralUtility::makeInstance(ConnectionPool::class)
@@ -102,19 +97,15 @@ class TokenRepository extends AbstractBackendRepository
         ;
     }
 
-    /**
-     * @param int    $uid
-     * @param string $accessToken
-     */
     public function updateAccessToken(int $uid, string $accessToken): void
     {
         GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
             ->update(
                 'tx_pxasocialfeed_domain_model_token',
-                ['access_token' => (string)$accessToken],
+                ['access_token' => $accessToken],
                 ['uid' => $uid],
-                [\PDO::PARAM_STR]
+                [\TYPO3\CMS\Core\Database\Connection::PARAM_STR]
             )
         ;
     }

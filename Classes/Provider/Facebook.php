@@ -22,17 +22,11 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
      */
     protected $enableBetaMode = false;
 
-    /**
-     * @return string
-     */
     public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * @return string
-     */
     public function getClientSecret(): string
     {
         return $this->clientSecret;
@@ -48,15 +42,11 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
             return [];
         }
 
-        return array_map(function ($page) {
-            return GeneralUtility::makeInstance(FacebookPage::class, $page);
-        }, $response['data']);
+        return array_map(fn($page): object => GeneralUtility::makeInstance(FacebookPage::class, $page), $response['data']);
     }
 
     /**
      * @param AccessToken $token The Facebook User token
-     *
-     * @return string
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token): string
     {
@@ -100,32 +90,24 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
 
         if (is_array($response) === false) {
             throw new \UnexpectedValueException(
-                'Invalid response received from Authorization Server. Expected JSON.'
+                'Invalid response received from Authorization Server. Expected JSON.', 6766070534
             );
         }
 
         return $response;
     }
 
-    /**
-     * @return string
-     */
-    public function getBaseGraphUrl(): string
+    protected function getBaseGraphUrl(): string
     {
         return parent::getBaseGraphUrl();
     }
 
-    /**
-     * @param string      $userId
-     * @param AccessToken $token
-     *
-     * @return string
-     */
+    
     protected function getLongLivePageTokenUrl(string $userId, AccessToken $token): string
     {
         $appSecretProof = AppSecretProof::create($this->clientSecret, $token->getToken());
 
         return $this->getBaseGraphUrl() . $this->graphApiVersion .
-               "/{$userId}/accounts?access_token=" . $token . '&appsecret_proof=' . $appSecretProof;
+               sprintf('/%s/accounts?access_token=', $userId) . $token . '&appsecret_proof=' . $appSecretProof;
     }
 }

@@ -19,8 +19,6 @@ class YoutubeFeedUpdater extends BaseUpdater
 {
     /**
      * Create/Update feed items
-     *
-     * @param FeedSourceInterface $source
      */
     public function update(FeedSourceInterface $source): void
     {
@@ -46,9 +44,6 @@ class YoutubeFeedUpdater extends BaseUpdater
 
     /**
      * Update youtube feed item
-     *
-     * @param Feed $feedItem
-     * @param array $rawData
      */
     protected function updateFeedItem(Feed $feedItem, array $rawData): void
     {
@@ -71,10 +66,6 @@ class YoutubeFeedUpdater extends BaseUpdater
 
     /**
      * Create new feed item
-     *
-     * @param array $rawData
-     * @param Configuration $configuration
-     * @return Feed
      */
     protected function createFeedItem(array $rawData, Configuration $configuration): Feed
     {

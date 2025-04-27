@@ -19,10 +19,6 @@ abstract class BaseFacebookSource extends BaseSource
 
     /**
      * Generate facebook endpoint
-     *
-     * @param string $id
-     * @param string $endPointEntry
-     * @return string
      */
     protected function generateEndPoint(string $id, string $endPointEntry): string
     {
@@ -57,13 +53,10 @@ abstract class BaseFacebookSource extends BaseSource
 
     /**
      * Get data from facebook
-     *
-     * @param array $response
-     * @return array
      */
     protected function getDataFromResponse(array $response): array
     {
-        if (!is_array($response) || !isset($response['data'])) {
+        if (!isset($response['data'])) {
             throw new InvalidFeedSourceData(
                 'Invalid data received for configuration ' . $this->getConfiguration()->getName() . '.',
                 1562842385128
@@ -75,8 +68,6 @@ abstract class BaseFacebookSource extends BaseSource
 
     /**
      * Return fields for endpoint request
-     *
-     * @return array
      */
     abstract protected function getEndPointFields(): array;
 }

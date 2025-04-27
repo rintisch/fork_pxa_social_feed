@@ -23,9 +23,6 @@ trait AdditionalFieldProviderTrait
 
     /**
      * Get current action
-     *
-     * @param SchedulerModuleController $schedulerModuleController
-     * @return string
      */
     protected function getAction(SchedulerModuleController $schedulerModuleController): string
     {
@@ -62,9 +59,6 @@ trait AdditionalFieldProviderTrait
         $this->getFlashMessageQueue()->enqueue($flashMessage);
     }
 
-    /**
-     * @return FlashMessageQueue
-     */
     protected function getFlashMessageQueue(): FlashMessageQueue
     {
         if ($this->flashMessageQueue === null) {
@@ -72,6 +66,7 @@ trait AdditionalFieldProviderTrait
             $service = GeneralUtility::makeInstance(FlashMessageService::class);
             $this->flashMessageQueue = $service->getMessageQueueByIdentifier();
         }
+
         return $this->flashMessageQueue;
     }
 }

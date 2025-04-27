@@ -26,7 +26,7 @@ class EidController
     /**
      * @var TokenRepository
      */
-    private $tokenRepository;
+    private readonly object $tokenRepository;
 
     public function __construct()
     {
@@ -35,9 +35,6 @@ class EidController
 
     /**
      * Add access token
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
      */
     public function addFbAccessTokenAction(ServerRequestInterface $request): ResponseInterface
     {
@@ -47,22 +44,19 @@ class EidController
         if ($request->getQueryParams()['token']) {
             return $this->processRequest($request, $response);
         }
+
         return $response->withStatus(400, 'Bad request');
     }
 
     /**
      * Process request and get token
-     *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @return ResponseInterface
      */
     protected function processRequest(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         session_start();
 
         $tokenUid = (int)$request->getQueryParams()['token'];
-        list('app_id' => $appId, 'app_secret' => $appSecret) = $this->getTokenAppIdAndSecret($tokenUid);
+        ['app_id' => $appId, 'app_secret' => $appSecret] = $this->getTokenAppIdAndSecret($tokenUid);
 
         if ($appId && $appSecret) {
             try {
@@ -96,11 +90,6 @@ class EidController
 
     /**
      * Convert access token to long live token
-     *
-     * @param Facebook $fb
-     * @param AccessToken $accessToken
-     * @param int $tokenUid
-     * @param ResponseInterface $response
      */
     protected function getAndPersistLongLivedAccessToken(
         Facebook $fb,
@@ -110,14 +99,14 @@ class EidController
     ): void {
         $content = [];
         $content[] = '<h3>Access Token</h3>';
-        $content[] = "<p>Value: {$accessToken->getToken()}</p>";
+        $content[] = sprintf('<p>Value: %s</p>', $accessToken->getToken());
 
         // Exchanges a short-lived access token for a long-lived one
         try {
             $accessToken = $fb->getLongLivedAccessToken($accessToken->getToken());
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             $accessTokenException = new FacebookObtainAccessTokenException(
-                'Error getting long-lived access token: ' . $e->getMessage(),
+                'Error getting long-lived access token: ' . $exception->getMessage(),
                 1562674067812
             );
             $accessTokenException->setStatusCode(503);
@@ -126,7 +115,7 @@ class EidController
         }
 
         $content[] = '<h3>Long-lived</h3>';
-        $content[] = "<p>Value: {$accessToken->getToken()}</p>";
+        $content[] = sprintf('<p>Value: %s</p>', $accessToken->getToken());
 
         $this->tokenRepository->updateAccessToken($tokenUid, (string)$accessToken);
         $this->tokenRepository->removeAllPageTokensByParentToken($tokenUid);
@@ -155,9 +144,6 @@ class EidController
 
     /**
      * Get app id and secret by token uid
-     *
-     * @param int $tokenUid
-     * @return array
      */
     protected function getTokenAppIdAndSecret(int $tokenUid): array
     {
@@ -182,8 +168,6 @@ class EidController
     /**
      * Get user access token
      *
-     * @param Facebook $fb
-     * @return AccessToken
      * @throws FacebookObtainAccessTokenException
      */
     protected function obtainAccessToken(Facebook $fb): AccessToken
@@ -235,9 +219,6 @@ class EidController
 
     /**
      * Redirect url
-     *
-     * @param int $tokenUid
-     * @return string
      */
     protected function buildRedirectUrl(int $tokenUid): string
     {

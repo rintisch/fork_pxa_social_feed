@@ -40,7 +40,7 @@ class YoutubeSource extends BaseSource
 
         if (!is_array($data) || !isset($data['items'])) {
             // @codingStandardsIgnoreStart
-            throw new InvalidFeedSourceData("Youtube response doesn't appear to be a valid json. Items are missing. Response return '$body'.", 1562910457024);
+            throw new InvalidFeedSourceData(sprintf("Youtube response doesn't appear to be a valid json. Items are missing. Response return '%s'.", $body), 1562910457024);
             // @codingStandardsIgnoreEnd
         }
 
@@ -50,8 +50,6 @@ class YoutubeSource extends BaseSource
     /**
      * Request youtube api
      *
-     * @param string $url
-     * @return ResponseInterface
      * @throws BadResponseException
      */
     protected function requestYoutubeApi(string $url): ResponseInterface
@@ -61,9 +59,6 @@ class YoutubeSource extends BaseSource
 
     /**
      * Youtube api endpoint url
-     *
-     * @param string $endPoint
-     * @return string
      */
     protected function generateEndPointUrl(string $endPoint): string
     {
@@ -72,8 +67,6 @@ class YoutubeSource extends BaseSource
 
     /**
      * Get api url
-     *
-     * @return string
      */
     protected function getUrl(): string
     {
@@ -82,9 +75,6 @@ class YoutubeSource extends BaseSource
 
     /**
      * Get youtube fields for request
-     *
-     * @param Configuration $configuration
-     * @return array
      */
     protected function getFields(Configuration $configuration): array
     {
@@ -99,8 +89,7 @@ class YoutubeSource extends BaseSource
 
         $eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
         $event           = $eventDispatcher->dispatch(new YoutubeEndPointRequestFieldsEvent($fields));
-        $fieldsArray     = $event->getFields();
 
-        return $fieldsArray;
+        return $event->getFields();
     }
 }

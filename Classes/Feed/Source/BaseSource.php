@@ -15,23 +15,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class BaseSource implements FeedSourceInterface
 {
-    /**
-     * @var Configuration
-     */
-    protected $configuration;
-
-    /**
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
+    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration)
     {
-        $this->configuration = $configuration;
     }
 
     /**
      * Get configuration
-     *
-     * @return Configuration
      */
     public function getConfiguration(): Configuration
     {
@@ -40,24 +29,15 @@ abstract class BaseSource implements FeedSourceInterface
 
     /**
      * Append endpoint url with get parameters based on fields
-     *
-     * @param string $url
-     * @param array $fields
-     * @return string
      */
     protected function addFieldsAsGetParametersToUrl(string $url, array $fields): string
     {
-        $url .= empty($fields) ? '' : ('?' . http_build_query($fields));
-
-        return $url;
+        return $url . ($fields === [] ? '' : ('?' . http_build_query($fields)));
     }
 
     /**
      * Get request to api url
      *
-     * @param string $url
-     * @param array $additionalOptions
-     * @return ResponseInterface
      * @throws BadResponseException
      */
     protected function performApiGetRequest(string $url, array $additionalOptions = []): ResponseInterface
@@ -75,9 +55,10 @@ abstract class BaseSource implements FeedSourceInterface
         if ($response->getStatusCode() === 200) {
             return $response;
         }
+
         $body = (string)$response->getBody();
         // @codingStandardsIgnoreStart
-        throw new BadResponseException("Api request return status '{$response->getStatusCode()}' while trying to request '$url' with message '$body'", 1562910160643);
+        throw new BadResponseException(sprintf("Api request return status '%s' while trying to request '%s' with message '%s'", $response->getStatusCode(), $url, $body), 1562910160643);
         // @codingStandardsIgnoreEnd
     }
 }

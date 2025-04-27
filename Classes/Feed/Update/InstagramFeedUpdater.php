@@ -19,8 +19,6 @@ class InstagramFeedUpdater extends BaseUpdater
 {
     /**
      * Create/Update feed items
-     *
-     * @param FeedSourceInterface $source
      */
     public function update(FeedSourceInterface $source): void
     {
@@ -50,16 +48,13 @@ class InstagramFeedUpdater extends BaseUpdater
 
     /**
      * Update model with instagram data
-     *
-     * @param Feed $feedItem
-     * @param array $data
      */
     public function populateGraphInstagramFeed(Feed $feedItem, array $data): void
     {
-        $isVideo = strtolower($data['media_type']) === 'video';
+        $isVideo = strtolower((string) $data['media_type']) === 'video';
 
         $media = $isVideo
-            ? ($data['thumbnail_url'] ?: $data['media_url'] ?: '') // Thumbnail or Media url for video
+            ? (($data['thumbnail_url'] ?: $data['media_url']) ?: '') // Thumbnail or Media url for video
             : ($data['media_url'] ?: ''); // Media or empty string
 
         $imageRef = $this->storeImg($media, $feedItem);
@@ -80,7 +75,7 @@ class InstagramFeedUpdater extends BaseUpdater
 
         // Set time
         $dateTime = new \DateTime();
-        $dateTime->setTimestamp(strtotime($data['timestamp']));
+        $dateTime->setTimestamp(strtotime((string) $data['timestamp']));
 
         $feedItem->setPostDate($dateTime);
 
@@ -93,9 +88,6 @@ class InstagramFeedUpdater extends BaseUpdater
 
     /**
      * Create feed item
-     *
-     * @param Configuration $configuration
-     * @return Feed
      */
     protected function createFeedItem(Configuration $configuration): Feed
     {

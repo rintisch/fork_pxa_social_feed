@@ -63,71 +63,18 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class AdministrationController extends ActionController
 {
-    /**
-     * @var ConfigurationRepository
-     */
-    protected $configurationRepository;
 
-    /**
-     * @var TokenRepository
-     */
-    protected $tokenRepository;
-
-    /**
-     * @var FeedRepository
-     */
-    protected $feedRepository;
-
-    /**
-     * @var BackendUserGroupRepository
-     */
-    protected $backendUserGroupRepository;
-    /**
-     * Summary of moduleTemplateFactory
-     * @var ModuleTemplateFactory
-     */
-    protected ModuleTemplateFactory $moduleTemplateFactory;
-
-    /**
-     * @var ModuleTemplate
-     */
     protected ModuleTemplate $moduleTemplate;
 
-    /**
-     * @param BackendUserGroupRepository $backendUserGroupRepository
-     */
-    public function __construct(BackendUserGroupRepository $backendUserGroupRepository, private ModuleTemplateFactory $moduleTemplateFactor, private readonly PageRenderer $pageRenderer)
+    public function __construct(
+        protected \Pixelant\PxaSocialFeed\Domain\Repository\BackendUserGroupRepository $backendUserGroupRepository,
+        private readonly PageRenderer $pageRenderer,
+        protected ModuleTemplateFactory $moduleTemplateFactory,
+        protected \Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository $configurationRepository,
+        protected \Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository $tokenRepository,
+        protected \Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository $feedRepository
+    )
     {
-        $this->backendUserGroupRepository = $backendUserGroupRepository;
-    }
-
-    public function injectModuleTemplateFactory(ModuleTemplateFactory $moduleTemplateFactory): void
-    {
-        $this->moduleTemplateFactory = $moduleTemplateFactory;
-    }
-
-    /**
-     * @param ConfigurationRepository $configurationRepository
-     */
-    public function injectConfigurationRepository(ConfigurationRepository $configurationRepository): void
-    {
-        $this->configurationRepository = $configurationRepository;
-    }
-
-    /**
-     * @param TokenRepository $tokenRepository
-     */
-    public function injectTokenRepository(TokenRepository $tokenRepository): void
-    {
-        $this->tokenRepository = $tokenRepository;
-    }
-
-    /**
-     * @param FeedRepository $feedRepository
-     */
-    public function injectFeedRepository(FeedRepository $feedRepository): void
-    {
-        $this->feedRepository = $feedRepository;
     }
 
     protected function initializeView()
@@ -136,7 +83,7 @@ class AdministrationController extends ActionController
         $this->pageRenderer->loadJavaScriptModule('@pixelant/pxa-social-feed/social-feed-administration-module.js');
     }
 
-    public function initializeAction(): void
+    protected function initializeAction(): void
     {
         $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         $this->createMenu();
@@ -165,16 +112,16 @@ class AdministrationController extends ActionController
      * Edit token form
      *
      * @param Token|null $tokenToEdit
-     * @param int $type
      */
     public function editTokenAction(Token $tokenToEdit = null, int $type = Token::FACEBOOK): ResponseInterface
     {
         $token = $tokenToEdit;
-        $isNew = $token === null;
+        $isNew = !$token instanceof \Pixelant\PxaSocialFeed\Domain\Model\Token;
 
         if (!$isNew) {
             $type = $token->getType();
         }
+
         $availableTypes = [];
 
         if ($isNew) {
@@ -183,7 +130,7 @@ class AdministrationController extends ActionController
             }
         }
 
-        $this->moduleTemplate->assignMultiple(compact('token', 'type', 'isNew', 'availableTypes'));
+        $this->moduleTemplate->assignMultiple(['token' => $token, 'type' => $type, 'isNew' => $isNew, 'availableTypes' => $availableTypes]);
         $this->assignBEGroups();
 
         return $this->moduleTemplate->renderResponse('Administration/EditToken');
@@ -191,8 +138,6 @@ class AdministrationController extends ActionController
 
     /**
      * Save token changes
-     *
-     * @param Token $tokenToEdit
      */
     #[Extbase\Validate(['validator' => TokenValidator::class, 'param' => 'tokenToEdit'])]
     public function updateTokenAction(Token $tokenToEdit): RedirectResponse
@@ -231,8 +176,6 @@ class AdministrationController extends ActionController
 
     /**
      * Delete token
-     *
-     * @param Token $tokenToDelete
      */
     public function deleteTokenAction(Token $tokenToDelete): RedirectResponse
     {
@@ -271,14 +214,12 @@ class AdministrationController extends ActionController
 
     /**
      * Edit configuration
-     *
-     * @param Configuration $configuration
      */
     public function editConfigurationAction(Configuration $configuration = null): ResponseInterface
     {
         $tokens = $this->findAllByRepository($this->tokenRepository);
 
-        $this->moduleTemplate->assignMultiple(compact('configuration', 'tokens'));
+        $this->moduleTemplate->assignMultiple(['configuration' => $configuration, 'tokens' => $tokens]);
         $this->assignBEGroups();
 
 
@@ -287,8 +228,6 @@ class AdministrationController extends ActionController
 
     /**
      * Update configuration
-     *
-     * @param Configuration $configuration
      */
     #[Extbase\Validate(['validator' => ConfigurationValidator::class, 'param' => 'configuration'])]
     public function updateConfigurationAction(Configuration $configuration): RedirectResponse
@@ -321,13 +260,11 @@ class AdministrationController extends ActionController
 
     /**
      * Delete configuration and feed items
-     *
-     * @param Configuration $configuration
      */
     public function deleteConfigurationAction(Configuration $configuration): RedirectResponse
     {
         // Remove all feeds
-        $feeds = $this->feedRepository->findByConfiguration($configuration);
+        $feeds = $this->feedRepository->findBy(['configuration' => $configuration]);
 
         foreach ($feeds as $feed) {
             $this->feedRepository->remove($feed);
@@ -346,17 +283,15 @@ class AdministrationController extends ActionController
 
     /**
      * Test run of import configuration
-     *
-     * @param Configuration $configuration
      */
     public function runConfigurationAction(Configuration $configuration): RedirectResponse
     {
         $importService = GeneralUtility::makeInstance(ImportFeedsTaskService::class);
         try {
             $importService->import([$configuration->getUid()]);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             $this->addFlashMessage(
-                $e->getMessage(),
+                $exception->getMessage(),
                 '',
                 ContextualFeedbackSeverity::ERROR,
             );
@@ -374,9 +309,6 @@ class AdministrationController extends ActionController
     /**
      * Check if editor restriction feature is enabled
      * If so find all with backend group access restriction
-     *
-     * @param AbstractBackendRepository $repository
-     * @return QueryResultInterface
      */
     protected function findAllByRepository(AbstractBackendRepository $repository): QueryResultInterface
     {
@@ -400,9 +332,7 @@ class AdministrationController extends ActionController
         if ($GLOBALS['BE_USER']->isAdmin()) {
             $groups = $this->backendUserGroupRepository->findAll($excludeGroups);
         } else {
-            $groups = array_filter($GLOBALS['BE_USER']->userGroups, function ($group) use ($excludeGroups) {
-                return !in_array($group['uid'], $excludeGroups);
-            });
+            $groups = array_filter($GLOBALS['BE_USER']->userGroups, fn($group): bool => !in_array($group['uid'], $excludeGroups));
         }
 
         $this->view->assign('beGroups', $groups);
@@ -411,7 +341,6 @@ class AdministrationController extends ActionController
     /**
      * Shortcut for translate
      *
-     * @param string $key
      * @param array|null $arguments
      * @return string
      */
@@ -443,18 +372,16 @@ class AdministrationController extends ActionController
                 ->setActive($this->request->getControllerActionName() === $action);
             $menu->addMenuItem($item);
         }
+
         $this->moduleTemplate->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
     }
 
     /**
      * Migrate feed items of configuration if storoge was changed
-     *
-     * @param Configuration $configuration
-     * @param int $newStorage
      */
     protected function migrateFeedsToNewStorage(Configuration $configuration, int $newStorage): void
     {
-        $feedItems = $this->feedRepository->findByConfiguration($configuration);
+        $feedItems = $this->feedRepository->findBy(['configuration' => $configuration]);
 
         /** @var Feed $feedItem */
         foreach ($feedItems as $feedItem) {
@@ -467,16 +394,13 @@ class AdministrationController extends ActionController
      * Check if instagram and facebook tokens has access token
      *
      * @param $tokens
-     * @return bool
      */
     protected function isTokensValid($tokens): bool
     {
         /** @var Token $token */
         foreach ($tokens as $token) {
-            if ($token->getType() === Token::INSTAGRAM || $token->getType() === Token::FACEBOOK) {
-                if (!$token->isValidFacebookAccessToken()) {
-                    return false;
-                }
+            if (($token->getType() === Token::INSTAGRAM || $token->getType() === Token::FACEBOOK) && !$token->isValidFacebookAccessToken()) {
+                return false;
             }
         }
 
@@ -499,11 +423,10 @@ class AdministrationController extends ActionController
      * Shortcut to redirect to index on tokens tab with flash message
      *
      * @param string|null $message
-     * @param int $severity
      */
-    protected function redirectToIndexTokenTab(string $message = null, int $severity = ContextualFeedbackSeverity::OK): RedirectResponse
+    protected function redirectToIndexTokenTab(string $message = null, ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): RedirectResponse
     {
-        if (!empty($message)) {
+        if ($message !== null && $message !== '' && $message !== '0') {
             $this->addFlashMessage(
                 $message,
                 '',
@@ -518,11 +441,10 @@ class AdministrationController extends ActionController
      * Shortcut to redirect to index with flash message
      *
      * @param string|null $message
-     * @param int $severity
      */
-    protected function redirectToIndex(string $message = null, int $severity = ContextualFeedbackSeverity::OK): RedirectResponse
+    protected function redirectToIndex(string $message = null, ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): RedirectResponse
     {
-        if (!empty($message)) {
+        if ($message !== null && $message !== '' && $message !== '0') {
             $this->addFlashMessage(
                 $message,
                 '',
@@ -535,15 +457,14 @@ class AdministrationController extends ActionController
 
     /**
      * Return exclude user group uids from ext configuration
-     *
-     * @return array
      */
-    protected function getExcludeGroups()
+    protected function getExcludeGroups(): array
     {
         $configuration = ConfigurationUtility::getExtensionConfiguration();
         if (isset($configuration['excludeBackendUserGroups'])) {
             return GeneralUtility::intExplode(',', $configuration['excludeBackendUserGroups'], true);
         }
+
         return [];
     }
 }

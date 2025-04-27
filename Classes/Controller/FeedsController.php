@@ -37,17 +37,8 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  */
 class FeedsController extends ActionController
 {
-    /**
-     * @var FeedRepository
-     */
-    protected $feedRepository;
-
-    /**
-     * @param FeedRepository $feedRepository
-     */
-    public function injectFeedRepository(FeedRepository $feedRepository): void
+    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository $feedRepository)
     {
-        $this->feedRepository = $feedRepository;
     }
 
     protected function initializeView($view) {}
@@ -77,28 +68,23 @@ class FeedsController extends ActionController
 
     /**
      * Load feed with ajax
-     *
-     * @param string $configuration
-     * @param int $feedsLimit
-     * @param string $partial
-     * @param string $presentation
      */
     public function loadFeedAjaxAction(
         string $configuration,
         int $feedsLimit = 10,
         string $partial = '',
         string $presentation = ''
-    ) {
+    ): void {
         $feeds = $this->feedRepository->findByConfigurations(
             GeneralUtility::intExplode(',', $configuration, true),
             $feedsLimit
         );
         $settings = array_merge(
             $this->settings,
-            compact('configuration', 'feedsLimit', 'partial', 'presentation')
+            ['configuration' => $configuration, 'feedsLimit' => $feedsLimit, 'partial' => $partial, 'presentation' => $presentation]
         );
 
-        $this->view->assignMultiple(compact('feeds', 'settings'));
+        $this->view->assignMultiple(['feeds' => $feeds, 'settings' => $settings]);
 
         header('Content-Type: application/json');
 

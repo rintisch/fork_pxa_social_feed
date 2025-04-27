@@ -17,19 +17,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class TwitterFeedUpdater extends BaseUpdater
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function injectEventDispatcher(EventDispatcherInterface $eventDispatcher): void
+    public function __construct(private readonly EventDispatcherInterface $eventDispatcher)
     {
-        $this->eventDispatcher = $eventDispatcher;
     }
+
+
     /**
      * Create/Update feed items
-     *
-     * @param FeedSourceInterface $source
      */
     public function update(FeedSourceInterface $source): void
     {
@@ -53,10 +47,6 @@ class TwitterFeedUpdater extends BaseUpdater
 
     /**
      * Create new twitter feed
-     *
-     * @param array $rawData
-     * @param Configuration $configuration
-     * @return Feed
      */
     protected function createFeedItem(array $rawData, Configuration $configuration): Feed
     {
@@ -77,14 +67,11 @@ class TwitterFeedUpdater extends BaseUpdater
 
     /**
      * Update feed item properties with raw data
-     *
-     * @param Feed $feedItem
-     * @param array $rawData
      */
     protected function updateFeedItem(Feed $feedItem, array $rawData): void
     {
         // Update text
-        $text = $rawData['full_text'] ?: $rawData['text'] ?: '';
+        $text = ($rawData['full_text'] ?: $rawData['text']) ?: '';
         if ($feedItem->getMessage() != $text) {
             $feedItem->setMessage($this->encodeMessage($text));
         }
@@ -98,7 +85,7 @@ class TwitterFeedUpdater extends BaseUpdater
 
         $likes = (int)($rawData['retweeted_status']['favorite_count'] ?? $rawData['favorite_count'] ?? 0);
 
-        if ($likes != $feedItem->getLikes()) {
+        if ($likes !== $feedItem->getLikes()) {
             $feedItem->setLikes($likes);
         }
     }

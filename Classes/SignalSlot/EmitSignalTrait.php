@@ -21,10 +21,6 @@ trait EmitSignalTrait
 
     /**
      * Emit signal
-     *
-     * @param string $name
-     * @param array $variables
-     * @return array
      */
     protected function emitSignal(string $name, array $variables): array
     {

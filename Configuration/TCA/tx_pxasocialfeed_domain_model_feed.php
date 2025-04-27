@@ -1,8 +1,8 @@
 <?php
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
-return (function () {
+return (function (): array {
     $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:';
 
     return [
@@ -75,11 +75,8 @@ return (function () {
                 'exclude' => 1,
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.post_date',
                 'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
+                    'type' => 'datetime',
                     'size' => 12,
-                    'eval' => 'datetime',
-                    'default' => null,
                 ],
             ],
             'post_url' => [
@@ -131,9 +128,8 @@ return (function () {
                 'exclude' => 1,
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.likes',
                 'config' => [
-                    'type' => 'input',
+                    'type' => 'number',
                     'size' => 4,
-                    'eval' => 'int',
                 ],
             ],
             'title' => [
@@ -157,11 +153,8 @@ return (function () {
                 'exclude' => 1,
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.update_date',
                 'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
+                    'type' => 'datetime',
                     'size' => 12,
-                    'eval' => 'datetime',
-                    'default' => null,
                 ],
             ],
             'configuration' => [

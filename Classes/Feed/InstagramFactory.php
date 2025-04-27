@@ -16,9 +16,6 @@ class InstagramFactory implements FeedFactoryInterface
 {
     /**
      * Feed source allow to fetch feed items
-     *
-     * @param Configuration $configuration
-     * @return InstagramSource
      */
     public function getFeedSource(Configuration $configuration): InstagramSource
     {
@@ -27,8 +24,6 @@ class InstagramFactory implements FeedFactoryInterface
 
     /**
      * Feed updater. Will create/update feed items
-     *
-     * @return InstagramFeedUpdater
      */
     public function getFeedUpdater(): InstagramFeedUpdater
     {

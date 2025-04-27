@@ -7,14 +7,12 @@ defined('TYPO3') || die('Access denied.');
     'Showfeed',
     'Pxa Social Feed'
 );
-
-// @codingStandardsIgnoreStart
-$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['pxasocialfeed_showfeed'] = 'pages,recursive,layout,select_key';
-$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['pxasocialfeed_showfeed'] = 'pi_flexform';
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--div--;Configuration,pi_flexform,', 'pxasocialfeed_showfeed', 'after:subheader');
 // @codingStandardsIgnoreEnd
 
 // Add flexform
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-    'pxasocialfeed_showfeed',
-    'FILE:EXT:pxa_social_feed/Configuration/FlexForm/SocialFeed.xml'
+    '*',
+    'FILE:EXT:pxa_social_feed/Configuration/FlexForm/SocialFeed.xml',
+    'pxasocialfeed_showfeed'
 );

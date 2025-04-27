@@ -29,9 +29,7 @@ class FacebookUser extends \League\OAuth2\Client\Provider\FacebookUser
             $this->pages = [];
         } else {
             $this->pages = array_map(
-                function ($page) {
-                    return GeneralUtility::makeInstance(FacebookPage::class, $page);
-                },
+                fn($page): object => GeneralUtility::makeInstance(FacebookPage::class, $page),
                 $response['accounts']['data']
             );
         }

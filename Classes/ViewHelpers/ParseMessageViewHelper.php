@@ -13,8 +13,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class ParseMessageViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -28,26 +26,19 @@ class ParseMessageViewHelper extends AbstractViewHelper
     /**
      * Arguments initializations
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('message', 'string', 'Feed message', false, '');
         $this->registerArgument('type', 'integer', 'Feed type', true);
     }
 
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
-        $message = $arguments['message'] ?: $renderChildrenClosure();
-        $type = $arguments['type'];
-
+    public function render()
+    {
+        $message = $this->arguments['message'] ?: $this->renderChildren();
+        $type = $this->arguments['type'];
         if (!$message) {
             return '';
         }
@@ -58,9 +49,8 @@ class ParseMessageViewHelper extends AbstractViewHelper
     /**
      * @param string $text
      * @param int $type
-     * @return mixed
      */
-    public static function parseFeedMessage($text, $type)
+    public static function parseFeedMessage($text, $type): array|string|null
     {
         // Convert urls to links
         $text = preg_replace(
@@ -71,7 +61,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
         $text = preg_replace(
             '$(\s|^)(www\.[a-z0-9_./?=&-]+)(?![^<>]*>)$i',
             '<a href="http://$2" target="_blank" rel="noreferrer">$2</a> ',
-            $text
+            (string) $text
         );
 
         switch ($type) {
@@ -80,15 +70,13 @@ class ParseMessageViewHelper extends AbstractViewHelper
                 // Convert hashtags to facebook searches in <a> links
                 $text = preg_replace_callback(
                     "/#([[:alnum:]\/.]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" '
-                                . 'href="https://www.facebook.com/hashtag/%s?source=feed_text">#%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
+                    fn($matches): string => sprintf(
+                        '<a target="_blank" rel="noreferrer" '
+                            . 'href="https://www.facebook.com/hashtag/%s?source=feed_text">#%s</a>',
+                        rawurlencode($matches[1]),
+                        htmlspecialchars($matches[1])
+                    ),
+                    (string) $text
                 );
                 break;
             case Token::TWITTER:
@@ -96,85 +84,73 @@ class ParseMessageViewHelper extends AbstractViewHelper
                 // Convert hashtags to twitter searches in <a> links
                 $text = preg_replace_callback(
                     "/#([[:alnum:]\/.]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://twitter.com/hashtag/%s">#%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
+                    fn($matches): string => sprintf(
+                        '<a target="_blank" rel="noreferrer" href="https://twitter.com/hashtag/%s">#%s</a>',
+                        rawurlencode($matches[1]),
+                        htmlspecialchars($matches[1])
+                    ),
+                    (string) $text
                 );
 
                 // Convert @tags to twitter profiles in <a> links
                 $text = preg_replace_callback(
                     "/@([[:alnum:]\/._]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.twitter.com/%s/">@%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
+                    fn($matches): string => sprintf(
+                        '<a target="_blank" rel="noreferrer" href="https://www.twitter.com/%s/">@%s</a>',
+                        rawurlencode($matches[1]),
+                        htmlspecialchars($matches[1])
+                    ),
+                    (string) $text
                 );
                 break;
             case Token::INSTAGRAM:
                 // Convert hashtags to instagram searches in <a> links
                 $text = preg_replace_callback(
                     "/#([[:alnum:]\/.]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" '
-                                . 'href="https://www.instagram.com/explore/tags/%s/">#%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
+                    fn($matches): string => sprintf(
+                        '<a target="_blank" rel="noreferrer" '
+                            . 'href="https://www.instagram.com/explore/tags/%s/">#%s</a>',
+                        rawurlencode($matches[1]),
+                        htmlspecialchars($matches[1])
+                    ),
+                    (string) $text
                 );
                 // Convert @tags to instagram profiles in <a> links
                 $text = preg_replace_callback(
                     "/@([[:alnum:]\/._]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.instagram.com/%s/">@%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
+                    fn($matches): string => sprintf(
+                        '<a target="_blank" rel="noreferrer" href="https://www.instagram.com/%s/">@%s</a>',
+                        rawurlencode($matches[1]),
+                        htmlspecialchars($matches[1])
+                    ),
+                    (string) $text
                 );
                 break;
             case Token::YOUTUBE:
                 //Convert hashtags to youtube searches in <a> links
                 $text = preg_replace_callback(
                     "/#([[:alnum:]\/.]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" '
-                                . 'href="https://www.youtube.com/results?search_query=%s">#%s</a>',
-                            rawurlencode('#' . $matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
+                    fn($matches): string => sprintf(
+                        '<a target="_blank" rel="noreferrer" '
+                            . 'href="https://www.youtube.com/results?search_query=%s">#%s</a>',
+                        rawurlencode('#' . $matches[1]),
+                        htmlspecialchars($matches[1])
+                    ),
+                    (string) $text
                 );
                 // Convert @tags to youtube profiles in <a> links
                 $text = preg_replace_callback(
                     "/@([[:alnum:]\/._]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.youtube.com/user/%s/">@%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
+                    fn($matches): string => sprintf(
+                        '<a target="_blank" rel="noreferrer" href="https://www.youtube.com/user/%s/">@%s</a>',
+                        rawurlencode($matches[1]),
+                        htmlspecialchars($matches[1])
+                    ),
+                    (string) $text
                 );
                 break;
             default:
-                throw new UnsupportedTokenType("Token type $type is not supported by view helper", 1564384491599);
+                throw new UnsupportedTokenType(sprintf('Token type %s is not supported by view helper', $type), 1564384491599);
         }
 
         return $text;

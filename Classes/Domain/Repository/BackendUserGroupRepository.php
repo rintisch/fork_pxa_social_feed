@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
+use Doctrine\DBAL\DBALException;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -16,8 +17,9 @@ class BackendUserGroupRepository
     /**
      * Find all BE user groups
      *
-     * @param array $exclude Uids of groups to exclude
+     * @param array|null $exclude Uids of groups to exclude
      * @return array
+     * @throws DBALException
      */
     public function findAll(array $exclude = null)
     {
@@ -28,7 +30,7 @@ class BackendUserGroupRepository
             ->select('*')
             ->from('be_groups');
 
-        if (!empty($exclude)) {
+        if ($exclude !== null && $exclude !== []) {
             $queryBuilder->where(
                 $queryBuilder->expr()->notIn(
                     'uid',
@@ -37,6 +39,6 @@ class BackendUserGroupRepository
             );
         }
 
-        return $queryBuilder->execute()->fetchAll();
+        return $queryBuilder->execute()->fetchAllAssociative();
     }
 }

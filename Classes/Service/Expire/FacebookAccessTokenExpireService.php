@@ -11,23 +11,12 @@ use Pixelant\PxaSocialFeed\Domain\Model\Token;
  */
 class FacebookAccessTokenExpireService
 {
-    /**
-     * @var Token
-     */
-    protected $token;
-
-    /**
-     * @param Token $token
-     */
-    public function __construct(Token $token)
+    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Model\Token $token)
     {
-        $this->token = $token;
     }
 
     /**
      * Check if access token is valid
-     *
-     * @return bool
      */
     public function hasExpired(): bool
     {
@@ -38,7 +27,6 @@ class FacebookAccessTokenExpireService
      * Check if token expire soon
      *
      * @param int $soonExpireAfterDays When we assume that token expire soon
-     * @return bool
      * @throws \Exception
      */
     public function willExpireSoon(int $soonExpireAfterDays): bool
@@ -49,13 +37,12 @@ class FacebookAccessTokenExpireService
     /**
      * Check how many days left for token
      *
-     * @return int
      * @throws \Exception
      */
     public function expireWhen(): int
     {
         $expireAt = $this->token->getFacebookAccessTokenMetadataExpirationDate();
-        if ($expireAt !== null && $expireAt->getTimestamp() >= time()) {
+        if ($expireAt instanceof \DateTime && $expireAt->getTimestamp() >= time()) {
             $today = new \DateTime();
             $interval = $today->diff($expireAt);
 
@@ -67,8 +54,6 @@ class FacebookAccessTokenExpireService
 
     /**
      * Access token require check
-     *
-     * @return bool
      */
     public function tokenRequireCheck(): bool
     {

@@ -33,6 +33,7 @@ class FacebookSource extends BaseFacebookSource
         if (!in_array($endPointEntry, ['feed', 'posts'])) {
             $endPointEntry = 'feed';
         }
+
         $endPointUrl = $this->generateEndPoint($this->getConfiguration()->getSocialId(), $endPointEntry);
         $response = file_get_contents(
             $fb->getBaseGraphUrl() .
@@ -45,8 +46,6 @@ class FacebookSource extends BaseFacebookSource
 
     /**
      * Return fields for endpoint request
-     *
-     * @return array
      */
     protected function getEndPointFields(): array
     {

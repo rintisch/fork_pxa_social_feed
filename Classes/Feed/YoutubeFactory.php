@@ -16,9 +16,6 @@ class YoutubeFactory implements FeedFactoryInterface
 {
     /**
      * Feed source allow to fetch feed items
-     *
-     * @param Configuration $configuration
-     * @return YoutubeSource
      */
     public function getFeedSource(Configuration $configuration): YoutubeSource
     {
@@ -27,8 +24,6 @@ class YoutubeFactory implements FeedFactoryInterface
 
     /**
      * Feed updater. Will create/update feed items
-     *
-     * @return YoutubeFeedUpdater
      */
     public function getFeedUpdater(): YoutubeFeedUpdater
     {

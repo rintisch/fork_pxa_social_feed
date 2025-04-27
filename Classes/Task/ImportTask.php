@@ -66,8 +66,6 @@ class ImportTask extends AbstractTask
 
     /**
      * Execute scheduler task
-     *
-     * @return bool
      */
     public function execute(): bool
     {
@@ -111,74 +109,47 @@ class ImportTask extends AbstractTask
         );
     }
 
-    /**
-     * @return array
-     */
     public function getConfigurations(): array
     {
         return $this->configurations;
     }
 
-    /**
-     * @param array $configurations
-     */
     public function setConfigurations(array $configurations): void
     {
         $this->configurations = $configurations;
     }
 
-    /**
-     * @return string
-     */
     public function getReceiverEmail(): string
     {
         return $this->receiverEmail;
     }
 
-    /**
-     * @param string $receiverEmail
-     */
     public function setReceiverEmail(string $receiverEmail): void
     {
         $this->receiverEmail = $receiverEmail;
     }
 
-    /**
-     * @return string
-     */
     public function getSenderEmail(): string
     {
         return $this->senderEmail;
     }
 
-    /**
-     * @param string $senderEmail
-     */
     public function setSenderEmail(string $senderEmail): void
     {
         $this->senderEmail = $senderEmail;
     }
 
-    /**
-     * @return NotificationService
-     */
     protected function getNotificationService(): NotificationService
     {
         $sender = $this->senderEmail ?: $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromAddress'];
         return GeneralUtility::makeInstance(NotificationService::class, $this->receiverEmail, $sender);
     }
 
-    /**
-     * @return bool
-     */
     public function isRunAllConfigurations(): bool
     {
         return $this->runAllConfigurations;
     }
 
-    /**
-     * @param bool $runAllConfigurations
-     */
     public function setRunAllConfigurations(bool $runAllConfigurations): void
     {
         $this->runAllConfigurations = $runAllConfigurations;

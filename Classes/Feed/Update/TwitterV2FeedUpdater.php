@@ -16,10 +16,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class TwitterV2FeedUpdater extends BaseUpdater
 {
+    public $eventDispatcher;
+
     /**
      * Create/Update feed items
-     *
-     * @param FeedSourceInterface $source
      */
     public function update(FeedSourceInterface $source): void
     {
@@ -47,10 +47,6 @@ class TwitterV2FeedUpdater extends BaseUpdater
 
     /**
      * Create new twitter feed
-     *
-     * @param array $rawData
-     * @param Configuration $configuration
-     * @return Feed
      */
     protected function createFeedItem(array $rawData, Configuration $configuration): Feed
     {
@@ -71,10 +67,6 @@ class TwitterV2FeedUpdater extends BaseUpdater
 
     /**
      * Update feed item properties with raw data
-     *
-     * @param Feed $feedItem
-     * @param array $rawData
-     * @param array $includes
      */
     protected function updateFeedItem(Feed $feedItem, array $rawData, array $includes): void
     {
@@ -95,6 +87,7 @@ class TwitterV2FeedUpdater extends BaseUpdater
                 }
             }
         }
+
         $imageRef = $this->storeImg($url, $feedItem);
         if ($imageRef != null && !$this->checkIfFalRelationIfAlreadyExists($feedItem->getFalMedia(), $imageRef)) {
             $feedItem->addFalMedia($imageRef);

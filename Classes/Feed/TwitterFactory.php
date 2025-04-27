@@ -16,9 +16,6 @@ class TwitterFactory implements FeedFactoryInterface
 {
     /**
      * Feed source allow to fetch feed items
-     *
-     * @param Configuration $configuration
-     * @return TwitterSource
      */
     public function getFeedSource(Configuration $configuration): TwitterSource
     {
@@ -27,8 +24,6 @@ class TwitterFactory implements FeedFactoryInterface
 
     /**
      * Feed updater. Will create/update feed items
-     *
-     * @return TwitterFeedUpdater
      */
     public function getFeedUpdater(): TwitterFeedUpdater
     {

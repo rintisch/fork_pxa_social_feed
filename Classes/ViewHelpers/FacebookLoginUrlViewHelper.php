@@ -42,8 +42,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class FacebookLoginUrlViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -64,7 +62,7 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
     /**
      * Initialize
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('token', Token::class, 'Token', true);
         $this->registerArgument('loginUrlAs', 'string', 'Render as', true);
@@ -73,38 +71,27 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return mixed
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
+    public function render()
+    {
         /** @var Token $token */
-        $token = $arguments['token'];
-        $loginUrlAs = $arguments['loginUrlAs'];
-        $redirectUrlAs = $arguments['redirectUrlAs'];
-        $permissions = GeneralUtility::trimExplode(',', $arguments['permissions']);
-
+        $token = $this->arguments['token'];
+        $loginUrlAs = $this->arguments['loginUrlAs'];
+        $redirectUrlAs = $this->arguments['redirectUrlAs'];
+        $permissions = GeneralUtility::trimExplode(',', $this->arguments['permissions']);
         $redirectUrl = static::buildRedirectUrl($token->getUid());
-
         try {
             $url = $token->getFacebookLoginUrl($token->getAppId(), $token->getAppSecret(), $redirectUrl, $permissions);
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
 
-        $variableProvider = $renderingContext->getVariableProvider();
-
+        $variableProvider = $this->renderingContext->getVariableProvider();
         static::removeVariables($variableProvider, $loginUrlAs, $redirectUrlAs);
-
         $variableProvider->add($redirectUrlAs, $redirectUrl);
-
-        if (str_contains($url, 'redirect_uri=&')) {
-            $urlStructure = explode('redirect_uri=&', $url);
+        if (str_contains((string) $url, 'redirect_uri=&')) {
+            $urlStructure = explode('redirect_uri=&', (string) $url);
             $url = sprintf(
                 '%sredirect_uri=%s&%s',
                 $urlStructure[0],
@@ -114,18 +101,13 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
         }
 
         $variableProvider->add($loginUrlAs, $url);
-        $content = $renderChildrenClosure();
-
+        $content = $this->renderChildren();
         static::removeVariables($variableProvider, $loginUrlAs, $redirectUrlAs);
-
         return $content;
     }
 
     /**
      * Clean template variables
-     *
-     * @param VariableProviderInterface $variableProvider
-     * @param string ...$vars
      */
     protected static function removeVariables(VariableProviderInterface $variableProvider, string ...$vars): void
     {
@@ -138,9 +120,6 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
 
     /**
      * Redirect url
-     *
-     * @param int $tokenUid
-     * @return string
      */
     protected static function buildRedirectUrl(int $tokenUid): string
     {

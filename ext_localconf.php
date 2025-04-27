@@ -1,8 +1,8 @@
 <?php
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
-(function () {
+(function (): void {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'PxaSocialFeed',
         'Showfeed',
@@ -12,10 +12,11 @@ defined('TYPO3') or die();
         // non-cacheable actions
         [
             \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax',
-        ]
+        ],
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
     );
 
-    $ll = 'LLL:EXT:' . 'pxa_social_feed' . '/Resources/Private/Language/locallang_be.xlf:';
+    $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:';
 
     // @codingStandardsIgnoreStart
     // Import task
@@ -29,11 +30,6 @@ defined('TYPO3') or die();
     // hook for extension BE view
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['pxasocialfeed_showfeed']['pxa_social_feed'] =
         \Pixelant\PxaSocialFeed\Hooks\PageLayoutView::class . '->getExtensionInformation';
-    // @codingStandardsIgnoreEnd
-
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
-        "@import 'EXT:pxa_social_feed/Configuration/TSconfig/ContentElementWizard.tsconfig'"
-    );
 
     // Register eID to obtain access token
     $eID = \Pixelant\PxaSocialFeed\Controller\EidController::IDENTIFIER;

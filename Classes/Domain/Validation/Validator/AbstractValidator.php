@@ -39,7 +39,7 @@ abstract class AbstractValidator extends \TYPO3\CMS\Extbase\Validation\Validator
      */
     protected function trimObjectProperties($object)
     {
-        if (is_object($object) && $object instanceof AbstractEntity) {
+        if ($object instanceof AbstractEntity) {
             $gettableProperties = ObjectAccess::getGettableProperties($object);
 
             foreach ($gettableProperties as $property => $value) {
