@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Feed\Update;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Feed\Update\BaseUpdater;
@@ -25,10 +25,6 @@ class BaseUpdaterTest extends UnitTestCase
         $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
         $reflection->setAccessible(true);
 
-        $singletonInstances = $reflection->getValue();
-        $singletonInstances[ObjectManager::class] = $this->createMock(ObjectManager::class);
-        $reflection->setValue(null, $singletonInstances);
-
         $this->subject = $this->getAccessibleMock(BaseUpdater::class, ['update'], [], '', false);
     }
 
@@ -44,9 +40,6 @@ class BaseUpdaterTest extends UnitTestCase
     {
         $feed = new Feed();
         $feedStorage = new ObjectStorage();
-
-        $this->inject($this->subject, 'feedRepository', $this->createMock(FeedRepository::class));
-        $this->inject($this->subject, 'feeds', $feedStorage);
 
         $this->subject->_call('addOrUpdateFeedItem', $feed);
 

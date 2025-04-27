@@ -36,9 +36,7 @@
   "config": {
     "vendor-dir": ".Build/vendor",
     "bin-dir": ".Build/bin",
-    "preferred-install": {
-      "typo3/cms": "source"
-    },
+    "lock": false,
     "allow-plugins": {
       "typo3/cms-composeinstallers": true,
       "typo3/cms-composer-installers": true,
@@ -46,19 +44,13 @@
     }
   },
   "scripts": {
-    "pre-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
-      "[ -L .Build/Web/typo3conf/ext/pxa_social_feed ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/pxa_social_feed"
-    ],
     "post-autoload-dump": [
-      "@prepare-extension-test-structure"
-    ],
-    "prepare-extension-test-structure": [
-      "Nimut\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
+      "mkdir -p .Build/public/typo3conf/ext/",
+      "[ -L .Build/public/typo3conf/ext/pxa_social_feed ] || ln -snvf ../../../../. .Build/public/typo3conf/ext/pxa_social_feed"
     ],
     "php:cs-fixer": "@php php-cs-fixer fix -v --dry-run --using-cache no --diff",
     "php:codesniffer": ".Build/bin/phpcs --standard=PSR2 Classes/ *.php && .Build/bin/phpcs -n --standard=PSR2 Configuration/TCA/",
-    "php:unittests": "export TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/",
+    "php:unittests": ".Build/bin/phpunit --testdox --color=always Tests/Unit/",
     "tests:all": "composer php:codesniffer && composer php:unittests"
   },
   "extra": {
@@ -68,7 +60,7 @@
     "typo3/cms": {
       "extension-key": "pxa_social_feed",
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/Web"
+      "web-dir": ".Build/public"
     }
   }
 }

@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Controller;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Controller\AdministrationController;
 use Pixelant\PxaSocialFeed\Domain\Repository\AbstractBackendRepository;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
