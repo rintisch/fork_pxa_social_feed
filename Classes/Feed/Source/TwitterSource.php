@@ -146,7 +146,7 @@ class TwitterSource extends BaseSource
         $urlParts = [];
 
         foreach ($oauth as $key => $value) {
-            $urlParts[] = $key . '=' . rawurlencode((string) $value);
+            $urlParts[] = $key . '=' . rawurlencode((string)$value);
         }
 
         return 'GET&' . rawurlencode($url) . '&' . rawurlencode(implode('&', $urlParts));

@@ -51,7 +51,7 @@ class InstagramFeedUpdater extends BaseUpdater
      */
     public function populateGraphInstagramFeed(Feed $feedItem, array $data): void
     {
-        $isVideo = strtolower((string) $data['media_type']) === 'video';
+        $isVideo = strtolower((string)$data['media_type']) === 'video';
 
         $media = $isVideo
             ? (($data['thumbnail_url'] ?: $data['media_url']) ?: '') // Thumbnail or Media url for video
@@ -75,7 +75,7 @@ class InstagramFeedUpdater extends BaseUpdater
 
         // Set time
         $dateTime = new \DateTime();
-        $dateTime->setTimestamp(strtotime((string) $data['timestamp']));
+        $dateTime->setTimestamp(strtotime((string)$data['timestamp']));
 
         $feedItem->setPostDate($dateTime);
 

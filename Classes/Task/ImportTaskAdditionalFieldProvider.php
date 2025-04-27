@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaSocialFeed\Task;
 
 use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Scheduler\AbstractAdditionalFieldProvider;
 use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;

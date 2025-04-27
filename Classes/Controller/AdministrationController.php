@@ -8,10 +8,6 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\AbstractBackendRepository;
-use Pixelant\PxaSocialFeed\Domain\Repository\BackendUserGroupRepository;
-use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
-use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
-use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
 use Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator;
 use Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokenValidator;
 use Pixelant\PxaSocialFeed\Service\Task\ImportFeedsTaskService;
@@ -25,7 +21,6 @@ use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
@@ -63,7 +58,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class AdministrationController extends ActionController
 {
-
     protected ModuleTemplate $moduleTemplate;
 
     public function __construct(
@@ -73,9 +67,7 @@ class AdministrationController extends ActionController
         protected \Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository $configurationRepository,
         protected \Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository $tokenRepository,
         protected \Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository $feedRepository
-    )
-    {
-    }
+    ) {}
 
     protected function initializeView()
     {
@@ -221,7 +213,6 @@ class AdministrationController extends ActionController
 
         $this->moduleTemplate->assignMultiple(['configuration' => $configuration, 'tokens' => $tokens]);
         $this->assignBEGroups();
-
 
         return $this->moduleTemplate->renderResponse('Administration/EditConfiguration');
     }

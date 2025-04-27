@@ -17,10 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class TwitterFeedUpdater extends BaseUpdater
 {
-    public function __construct(private readonly EventDispatcherInterface $eventDispatcher)
-    {
-    }
-
+    public function __construct(private readonly EventDispatcherInterface $eventDispatcher) {}
 
     /**
      * Create/Update feed items

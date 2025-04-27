@@ -11,9 +11,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Token;
  */
 class FacebookAccessTokenExpireService
 {
-    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Model\Token $token)
-    {
-    }
+    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Model\Token $token) {}
 
     /**
      * Check if access token is valid

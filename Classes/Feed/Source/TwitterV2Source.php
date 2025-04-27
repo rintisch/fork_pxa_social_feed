@@ -83,7 +83,7 @@ class TwitterV2Source extends BaseSource
         $url = $this->getApiUrl() . $endPoint;
 
         foreach ($pathVariables as $key => $value) {
-            $url = str_replace($key, rawurlencode((string) $value), $url);
+            $url = str_replace($key, rawurlencode((string)$value), $url);
         }
 
         return $url;

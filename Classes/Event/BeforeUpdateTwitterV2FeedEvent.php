@@ -6,9 +6,7 @@ namespace Pixelant\PxaSocialFeed\Event;
 
 final class BeforeUpdateTwitterV2FeedEvent
 {
-    public function __construct(private $feedItem, private $rawData, private $configuration, private $includes)
-    {
-    }
+    public function __construct(private $feedItem, private $rawData, private $configuration, private $includes) {}
 
     public function getFeedItem()
     {

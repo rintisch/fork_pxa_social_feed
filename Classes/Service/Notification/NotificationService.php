@@ -13,9 +13,7 @@ use TYPO3\CMS\Core\Utility\MailUtility;
  */
 class NotificationService
 {
-    public function __construct(protected string $receiverEmail = '', protected string $senderEmail = '')
-    {
-    }
+    public function __construct(protected string $receiverEmail = '', protected string $senderEmail = '') {}
 
     /**
      * Notify by email

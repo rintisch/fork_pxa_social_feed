@@ -121,7 +121,7 @@ return (function (): array {
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.fal_media',
                 'config' => [
                     'type' => 'file',
-                    'allowed' => 'common-image-types'
+                    'allowed' => 'common-image-types',
                 ],
             ],
             'likes' => [

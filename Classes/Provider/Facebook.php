@@ -90,7 +90,8 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
 
         if (is_array($response) === false) {
             throw new \UnexpectedValueException(
-                'Invalid response received from Authorization Server. Expected JSON.', 6766070534
+                'Invalid response received from Authorization Server. Expected JSON.',
+                6766070534
             );
         }
 
@@ -102,7 +103,6 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
         return parent::getBaseGraphUrl();
     }
 
-    
     protected function getLongLivePageTokenUrl(string $userId, AccessToken $token): string
     {
         $appSecretProof = AppSecretProof::create($this->clientSecret, $token->getToken());

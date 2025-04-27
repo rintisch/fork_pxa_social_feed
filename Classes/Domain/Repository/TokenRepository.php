@@ -54,14 +54,14 @@ class TokenRepository extends AbstractBackendRepository
     public function findFacebookPageToken(Token $token, string $fbSocialId)
     {
         $query = $this->createQuery();
-        $query->getQuerySettings ()->setIgnoreEnableFields ( TRUE );
+        $query->getQuerySettings()->setIgnoreEnableFields(true);
         //TODO: handle Facebook Social ID and parent token
         // $query->equals('parentToken', $token->getParentToken()),
         // $query->equals('fbSocialId', $fbSocialId),
         $query->matching(
             $query->logicalAnd(
-                $query->equals ( 'parentToken', 0 ),
-                $query->equals ( 'fbSocialId', '' ),
+                $query->equals('parentToken', 0),
+                $query->equals('fbSocialId', ''),
             )
         );
 

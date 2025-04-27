@@ -2,7 +2,6 @@
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
-use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -37,9 +36,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  */
 class FeedsController extends ActionController
 {
-    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository $feedRepository)
-    {
-    }
+    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository $feedRepository) {}
 
     protected function initializeView($view) {}
 

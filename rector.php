@@ -6,7 +6,6 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\PostRector\Rector\NameImportingPostRector;
-use Rector\Set\ValueObject\SetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 use Rector\ValueObject\PhpVersion;
 use Ssch\TYPO3Rector\CodeQuality\General\ConvertImplicitVariablesToExplicitGlobalsRector;
@@ -45,7 +44,7 @@ return RectorConfig::configure()
         AddVoidReturnTypeWhereNoReturnRector::class,
         ConvertImplicitVariablesToExplicitGlobalsRector::class,
         RemoveUselessParamTagRector::class,
-        AddTypeToConstRector::class
+        AddTypeToConstRector::class,
     ])
     ->withConfiguredRule(ExtEmConfRector::class, [
         ExtEmConfRector::PHP_VERSION_CONSTRAINT => '8.2.0-8.4.99',
@@ -56,6 +55,6 @@ return RectorConfig::configure()
     ->withSkip([
         NameImportingPostRector::class => [
             'ClassAliasMap.php',
-        ]
+        ],
     ])
 ;

@@ -8,9 +8,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 
 final class RemovedFeedItemEvent
 {
-    public function __construct(private $feed)
-    {
-    }
+    public function __construct(private $feed) {}
 
     public function getFeed(): Feed
     {

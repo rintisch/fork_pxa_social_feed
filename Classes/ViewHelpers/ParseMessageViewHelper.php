@@ -4,9 +4,7 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Exception\UnsupportedTokenType;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class ParseMessageViewHelper
@@ -61,7 +59,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
         $text = preg_replace(
             '$(\s|^)(www\.[a-z0-9_./?=&-]+)(?![^<>]*>)$i',
             '<a href="http://$2" target="_blank" rel="noreferrer">$2</a> ',
-            (string) $text
+            (string)$text
         );
 
         switch ($type) {
@@ -76,7 +74,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                         rawurlencode($matches[1]),
                         htmlspecialchars($matches[1])
                     ),
-                    (string) $text
+                    (string)$text
                 );
                 break;
             case Token::TWITTER:
@@ -89,7 +87,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                         rawurlencode($matches[1]),
                         htmlspecialchars($matches[1])
                     ),
-                    (string) $text
+                    (string)$text
                 );
 
                 // Convert @tags to twitter profiles in <a> links
@@ -100,7 +98,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                         rawurlencode($matches[1]),
                         htmlspecialchars($matches[1])
                     ),
-                    (string) $text
+                    (string)$text
                 );
                 break;
             case Token::INSTAGRAM:
@@ -113,7 +111,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                         rawurlencode($matches[1]),
                         htmlspecialchars($matches[1])
                     ),
-                    (string) $text
+                    (string)$text
                 );
                 // Convert @tags to instagram profiles in <a> links
                 $text = preg_replace_callback(
@@ -123,7 +121,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                         rawurlencode($matches[1]),
                         htmlspecialchars($matches[1])
                     ),
-                    (string) $text
+                    (string)$text
                 );
                 break;
             case Token::YOUTUBE:
@@ -136,7 +134,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                         rawurlencode('#' . $matches[1]),
                         htmlspecialchars($matches[1])
                     ),
-                    (string) $text
+                    (string)$text
                 );
                 // Convert @tags to youtube profiles in <a> links
                 $text = preg_replace_callback(
@@ -146,7 +144,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                         rawurlencode($matches[1]),
                         htmlspecialchars($matches[1])
                     ),
-                    (string) $text
+                    (string)$text
                 );
                 break;
             default:

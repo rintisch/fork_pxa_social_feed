@@ -6,9 +6,7 @@ namespace Pixelant\PxaSocialFeed\Event;
 
 final class ChangedFeedItemEvent
 {
-    public function __construct(private $feed)
-    {
-    }
+    public function __construct(private $feed) {}
 
     public function getFeed()
     {

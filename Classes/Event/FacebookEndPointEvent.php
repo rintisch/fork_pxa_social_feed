@@ -6,9 +6,7 @@ namespace Pixelant\PxaSocialFeed\Event;
 
 final class FacebookEndPointEvent
 {
-    public function __construct(private $endPoint)
-    {
-    }
+    public function __construct(private $endPoint) {}
 
     /**
      * @return mixed

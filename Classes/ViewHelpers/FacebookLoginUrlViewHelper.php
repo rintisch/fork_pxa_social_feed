@@ -32,10 +32,8 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
 use Pixelant\PxaSocialFeed\Controller\EidController;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class TokenGenerationUrlViewHelper
@@ -90,8 +88,8 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
         $variableProvider = $this->renderingContext->getVariableProvider();
         static::removeVariables($variableProvider, $loginUrlAs, $redirectUrlAs);
         $variableProvider->add($redirectUrlAs, $redirectUrl);
-        if (str_contains((string) $url, 'redirect_uri=&')) {
-            $urlStructure = explode('redirect_uri=&', (string) $url);
+        if (str_contains((string)$url, 'redirect_uri=&')) {
+            $urlStructure = explode('redirect_uri=&', (string)$url);
             $url = sprintf(
                 '%sredirect_uri=%s&%s',
                 $urlStructure[0],

@@ -15,9 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class BaseSource implements FeedSourceInterface
 {
-    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration)
-    {
-    }
+    public function __construct(protected \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration) {}
 
     /**
      * Get configuration

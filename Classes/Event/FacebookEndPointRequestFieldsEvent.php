@@ -6,9 +6,7 @@ namespace Pixelant\PxaSocialFeed\Event;
 
 final class FacebookEndPointRequestFieldsEvent
 {
-    public function __construct(private $fields)
-    {
-    }
+    public function __construct(private $fields) {}
 
     public function getFields()
     {
