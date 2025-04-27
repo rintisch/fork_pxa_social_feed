@@ -3,11 +3,6 @@ import Notification from '@typo3/backend/notification.js';
 import Modal from '@typo3/backend/modal.js';
 import $ from 'jquery';
 import Severity from '@typo3/backend/severity.js';
-import bootstrap from '@typo3/backend/bootstrap';
-/*
- * file created by Abdellatif Landolsi <abdellatif@landolsi.de> for TYPO3 v12.4
- * Date: 2023-10-19
- */
 
 class SocialFeedAdministrationModule {
   constructor() {
@@ -21,16 +16,18 @@ class SocialFeedAdministrationModule {
       feedsStorageTitle: '[data-identifier="feed-storage-title"]',
       copyRedirectUriButton: '.copy-redirect-uri-button',
       facebookLoginButton: '.facebook-login-link',
+      redirectUrl: '#redirect-uri-holder-2',
     };
     DocumentService.ready().then(() => {
       this.initialize();
     });
   }
+
   initialize() {
     if (this._isRunning === false) {
       this._bootstrap();
     }
-    _isRunning = true;
+    let _isRunning = true;
   }
 
   _bootstrap() {
@@ -39,7 +36,6 @@ class SocialFeedAdministrationModule {
     this._changeSocialType();
     this._winStorageBrowser();
     this._getRedirectUriButtonClick();
-    this._initToolTip();
     this._activateTabs();
   }
 
@@ -49,13 +45,25 @@ class SocialFeedAdministrationModule {
    * @private
    */
   _activateTabs() {
-    let triggerTabList = [].slice.call(document.querySelectorAll('#tabs a'));
+    const triggerTabList = [].slice.call(document.querySelectorAll('#tabs a'));
+    const parent = document.querySelectorAll('#tabs')[0].parentElement;
+    const contentContainer = parent.querySelector('.tab-content');
+
     triggerTabList.forEach(function (triggerEl) {
-      let tabTrigger = new bootstrap.Tab(triggerEl);
+      const targetId = triggerEl.getAttribute('href').slice(1,);
 
       triggerEl.addEventListener('click', function (event) {
         event.preventDefault();
-        tabTrigger.show();
+
+        for (let elem of contentContainer.children) {
+          if (elem.id === targetId) {
+            elem.classList.add('active');
+            elem.classList.add('show');
+          } else {
+            elem.classList.remove('active');
+            elem.classList.remove('show');
+          }
+        }
       });
     });
   }
@@ -66,21 +74,21 @@ class SocialFeedAdministrationModule {
    * @private
    */
   _deleteConfirmation() {
-    this._getDomElementIdentifier('confirmationButton').on('click', function (e) {
+    this._getDomElementByIdentifier('confirmationButton').addEventListener('click', function (e) {
       e.preventDefault();
 
-      var $this = $(this);
-      var title = $this.data('confirmation-title') || 'Delete';
-      var message = $this.data('confirmation-message') || 'Are you sure you want to delete this record ?';
+      let $this = $(this);
+      let title = $this.data('confirmation-title') || 'Delete';
+      let message = $this.data('confirmation-message') || 'Are you sure you want to delete this record?';
 
-      var url = $this.attr('href'),
+      let url = $this.attr('href'),
         modal = Modal.confirm(title, message, Severity.warning);
 
-      modal.on('confirm.button.cancel', function () {
+      modal.addEventListener('confirm.button.cancel', function () {
         Modal.dismiss(modal);
       });
 
-      modal.on('confirm.button.ok', function () {
+      modal.addEventListener('confirm.button.ok', function () {
         Modal.dismiss(modal);
         window.location.href = url;
       });
@@ -93,15 +101,15 @@ class SocialFeedAdministrationModule {
    * @private
    */
   _facebookLoginWindow() {
-    this._getDomElementIdentifier('facebookLoginButton').on('click', function (e) {
+    this._getDomElementByIdentifier('facebookLoginButton').addEventListener('click', function (e) {
       e.preventDefault();
 
-      var $this = $(this);
-      var w = 800;
-      var h = 800;
+      let $this = $(this);
+      const w = 800;
+      const h = 800;
 
-      var y = window.top.outerHeight / 2 + window.top.screenY - h / 2;
-      var x = window.top.outerWidth / 2 + window.top.screenX - w / 2;
+      const y = window.top.outerHeight / 2 + window.top.screenY - h / 2;
+      const x = window.top.outerWidth / 2 + window.top.screenX - w / 2;
 
       window.open($this.attr('href'), 'Facebook login', 'height=' + h + ',width=' + w + 'top=' + y + ', left=' + x);
     });
@@ -113,8 +121,11 @@ class SocialFeedAdministrationModule {
    * @private
    */
   _changeSocialType() {
-    this._getDomElementIdentifier('selectSocialType').on('change', function () {
-      var selectSocialType = $(this).find(':selected').val();
+    const elem = this._getDomElementByIdentifier('selectSocialType');
+    if (!elem) return;
+
+    elem.addEventListener('change', function () {
+      let selectSocialType = $(this).find(':selected').val();
 
       window.location.href = $(_getDomElementIdentifier('socialTypeUrlKeep') + selectSocialType).val();
     });
@@ -125,7 +136,13 @@ class SocialFeedAdministrationModule {
    * @private
    */
   _getRedirectUriButtonClick() {
-    new clipboard(this._getDomElementIdentifier('copyRedirectUriButton'));
+    const elem = this._getDomElementByIdentifier('copyRedirectUriButton');
+    const clipboardText = this._getDomElementByIdentifier('redirectUrl');
+
+    if (!elem || !clipboardText) return;
+    elem.addEventListener('click', () => {
+      navigator.clipboard.writeText(clipboardText.innerText);
+    })
   }
 
   /**
@@ -152,14 +169,17 @@ class SocialFeedAdministrationModule {
         fieldElement.value = e.data.value;
       }
 
-      const storageTitleElement = document.querySelector(this._getDomElementIdentifier('feedsStorageTitle'));
+      const storageTitleElement = document.querySelector(this._getDomElementByIdentifier('feedsStorageTitle'));
       if (storageTitleElement) {
         storageTitleElement.innerHTML = e.data.label;
       }
     });
 
-    this._getDomElementIdentifier('winStorageBrowser').on('click', function () {
-      var insertTarget = this._getDomElementIdentifier('feedsStorageInput'),
+    const elem = this._getDomElementByIdentifier('selectSocialType');
+    if (!elem) return;
+
+    elem.addEventListener('click', function () {
+      let insertTarget = this._getDomElementByIdentifier('feedsStorageInput'),
         randomIdentifier = Math.floor(Math.random() * 100000 + 1);
 
       insertTarget.attr('data-insert-target', randomIdentifier);
@@ -190,8 +210,8 @@ class SocialFeedAdministrationModule {
    * @return {*|undefined}
    * @private
    */
-  _getDomElementIdentifier(elementIdentifier) {
-    return _domElementsSelectors[elementIdentifier] || undefined;
+  _getDomElementByIdentifier(elementIdentifier) {
+    return document.querySelector(this._domElementsSelectors[elementIdentifier]) || undefined;
   }
 
   /**

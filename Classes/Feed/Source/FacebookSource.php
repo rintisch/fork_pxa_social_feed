@@ -35,7 +35,7 @@ class FacebookSource extends BaseFacebookSource
         }
         $endPointUrl = $this->generateEndPoint($this->getConfiguration()->getSocialId(), $endPointEntry);
         $response = file_get_contents(
-            $fb::BASE_GRAPH_URL .
+            $fb->getBaseGraphUrl() .
             self::GRAPH_VERSION . '/' . $endPointUrl
         );
         $response = json_decode($response, true);

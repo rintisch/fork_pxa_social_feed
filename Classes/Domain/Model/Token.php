@@ -78,9 +78,9 @@ class Token extends AbstractEntity
     /**
      * Default PID
      *
-     * @var int
+     * @var ?int
      */
-    protected $pid = 0;
+    protected ?int $pid = 0;
 
     /**
      * @var ObjectStorage<BackendUserGroup>|null
@@ -342,7 +342,7 @@ class Token extends AbstractEntity
                 $this->getFb(
                     $this->getAppId(),
                     $this->getAppSecret()
-                )->getLongLivedAccessToken($token);
+                )->getLongLivedAccessToken((string)$token->getToken());
             } catch (FacebookProviderException|IdentityProviderException $exception) {
                 $isValid = false;
             }

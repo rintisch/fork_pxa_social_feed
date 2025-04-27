@@ -110,9 +110,9 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
     /**
      * @return string
      */
-    protected function getBaseGraphUrl(): string
+    public function getBaseGraphUrl(): string
     {
-        return $this->enableBetaMode ? static::BASE_GRAPH_URL_BETA : static::BASE_GRAPH_URL;
+        return parent::getBaseGraphUrl();
     }
 
     /**

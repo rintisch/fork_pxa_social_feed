@@ -6,10 +6,9 @@
     <f:section name="content">
         <f:comment><!--clean all messages--></f:comment>
         <f:flashMessages as="messages" />
-
         <f:if condition="{tokens -> f:count()} > 0">
             <f:then>
-                <h4><f:translate key="pxasocialfeed_module.labels.configuration_action"/></h4>
+                <h4><f:translate key="module.configuration_action"/></h4>
 
                 <f:render partial="Backend/ValidationErrors" arguments="{for: 'configuration'}"/>
 

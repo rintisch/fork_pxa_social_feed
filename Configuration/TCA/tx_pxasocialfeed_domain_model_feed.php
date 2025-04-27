@@ -120,31 +120,12 @@ return (function () {
                 ],
             ],
             'fal_media' => [
-              'exclude' => true,
-              'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.fal_media',
-              'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                  'fal_media',
-                  [
-                    'appearance' => [
-                      'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
-                    ],
-                    'foreign_match_fields' => [
-                      'fieldname' => 'fal_media',
-                      'tablenames' => 'tx_pxasocialfeed_domain_model_feed',
-                    ],
-                    'overrideChildTca' => [
-                      'types' => [
-                        \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
-                          'showitem' => '
-                          --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                          --palette--;;filePalette
-                        ',
-                        ],
-                      ],
-                    ],
-                  ],
-                  'jpg,jpeg,png,gif,svg'
-              ),
+                'exclude' => true,
+                'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.fal_media',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types'
+                ],
             ],
             'likes' => [
                 'exclude' => 1,

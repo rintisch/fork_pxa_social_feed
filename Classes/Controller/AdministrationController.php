@@ -132,32 +132,11 @@ class AdministrationController extends ActionController
 
     protected function initializeView()
     {
-        // $this->pageRenderer->addCssFile ( 'EXT:pxa_social_feed/Resources/Public/Css/Backend/SocialFeedModule.css' );
-        // $this->pageRenderer->loadJavaScriptModule ( '@pixelant/pxa-social-feed/social-feed-administration-module.js' );
-
-        $this->pageRenderer->addRequireJsConfiguration(
-            [
-                'paths' => [
-                    'clipboard' => PathUtility::getAbsoluteWebPath(
-                        GeneralUtility::getFileAbsFileName(
-                            'EXT:pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
-                        )
-                    ),
-                ],
-                'shim' => [
-                    'deps' => ['jquery'],
-                    'clipboard' => ['exports' => 'ClipboardJS'],
-                ],
-            ]
-        );
-
-        $this->pageRenderer->loadRequireJsModule(
-            'TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule',
-            "function(socialFeedModule) { socialFeedModule.getInstance({$this->getInlineSettings()}).run() }"
-        );
+        $this->pageRenderer->addCssFile('EXT:pxa_social_feed/Resources/Public/Css/Backend/SocialFeedModule.css');
+        $this->pageRenderer->loadJavaScriptModule('@pixelant/pxa-social-feed/social-feed-administration-module.js');
     }
 
-    public function initializeAction()
+    public function initializeAction(): void
     {
         $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         $this->createMenu();
@@ -171,16 +150,15 @@ class AdministrationController extends ActionController
     public function indexAction($activeTokenTab = false): ResponseInterface
     {
         $tokens = $this->findAllByRepository($this->tokenRepository);
-        $this->view->assignMultiple([
-            'tokens'         => $tokens,
+        $this->moduleTemplate->assignMultiple([
+            'tokens' => $tokens,
             'configurations' => $this->findAllByRepository($this->configurationRepository),
             'activeTokenTab' => $activeTokenTab,
             'isTokensValid' => $this->isTokensValid($tokens),
             'isAdmin' => $GLOBALS['BE_USER']->isAdmin(),
         ]);
 
-        $this->moduleTemplate->setContent ( $this->view->render () );
-        return $this->htmlResponse($this->moduleTemplate->renderContent());
+        return $this->moduleTemplate->renderResponse('Administration/Index');
     }
 
     /**
@@ -205,11 +183,10 @@ class AdministrationController extends ActionController
             }
         }
 
-        $this->view->assignMultiple(compact('token', 'type', 'isNew', 'availableTypes'));
+        $this->moduleTemplate->assignMultiple(compact('token', 'type', 'isNew', 'availableTypes'));
         $this->assignBEGroups();
 
-        $this->moduleTemplate->setContent ( $this->view->render () );
-        return $this->htmlResponse ( $this->moduleTemplate->renderContent () );
+        return $this->moduleTemplate->renderResponse('Administration/EditToken');
     }
 
     /**
@@ -238,10 +215,10 @@ class AdministrationController extends ActionController
      *
      * @param Token $token
      */
-    public function resetAccessTokenAction ( Token $resetToken ) : RedirectResponse
+    public function resetAccessTokenAction(Token $resetToken): RedirectResponse
     {
-        $resetToken->setAccessToken ( '' );
-        $this->tokenRepository->update ( $resetToken );
+        $resetToken->setAccessToken('');
+        $this->tokenRepository->update($resetToken);
 
         $this->addFlashMessage(
             'Access token was reset',
@@ -257,19 +234,18 @@ class AdministrationController extends ActionController
      *
      * @param Token $tokenToDelete
      */
-    public function deleteTokenAction ( Token $tokenToDelete ) : RedirectResponse
+    public function deleteTokenAction(Token $tokenToDelete): RedirectResponse
     {
-        $tokenConfigurations = $this->configurationRepository->findConfigurationByToken ( $tokenToDelete );
+        $tokenConfigurations = $this->configurationRepository->findConfigurationByToken($tokenToDelete);
 
         if ($tokenConfigurations->count() === 0) {
-            $this->tokenRepository->remove ( $tokenToDelete );
+            $this->tokenRepository->remove($tokenToDelete);
 
-            if ( $tokenToDelete->getType () === Token::FACEBOOK )
-                {
+            if ($tokenToDelete->getType() === Token::FACEBOOK) {
                 // Remove all page access tokens created by this token
                 $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
                     ->getConnectionForTable('tx_pxasocialfeed_domain_model_token');
-                $queryBuilder->delete ( 'tx_pxasocialfeed_domain_model_token', [ 'parent_token' => $tokenToDelete->getUid () ] );
+                $queryBuilder->delete('tx_pxasocialfeed_domain_model_token', ['parent_token' => $tokenToDelete->getUid()]);
             }
 
             $this->addFlashMessage(
@@ -284,7 +260,7 @@ class AdministrationController extends ActionController
         $this->addFlashMessage(
             $this->translate(
                 'error_token_configuration_exist',
-                [ $tokenConfigurations->getFirst()->getName() ],
+                [$tokenConfigurations->getFirst()->getName()],
             ),
             '',
             ContextualFeedbackSeverity::ERROR,
@@ -302,12 +278,11 @@ class AdministrationController extends ActionController
     {
         $tokens = $this->findAllByRepository($this->tokenRepository);
 
-        $this->view->assignMultiple(compact('configuration', 'tokens'));
+        $this->moduleTemplate->assignMultiple(compact('configuration', 'tokens'));
         $this->assignBEGroups();
 
 
-        $this->moduleTemplate->setContent ( $this->view->render () );
-        return $this->htmlResponse ( $this->moduleTemplate->renderContent () );
+        return $this->moduleTemplate->renderResponse('Administration/EditConfiguration');
     }
 
     /**
@@ -332,7 +307,7 @@ class AdministrationController extends ActionController
             GeneralUtility::makeInstance(PersistenceManagerInterface::class)->persistAll();
 
             // Redirect back to edit view, so user can now provide social ID according to selected token
-            return new RedirectResponse($this->uriBuilder->reset()->uriFor('editConfiguration', [ 'configuration' => $configuration ], 'Administration', 'PxaSocialFeed'));
+            return new RedirectResponse($this->uriBuilder->reset()->uriFor('editConfiguration', ['configuration' => $configuration], 'Administration', 'PxaSocialFeed'));
         }
 
         $this->addFlashMessage(
@@ -378,7 +353,7 @@ class AdministrationController extends ActionController
     {
         $importService = GeneralUtility::makeInstance(ImportFeedsTaskService::class);
         try {
-            $importService->import([ $configuration->getUid() ]);
+            $importService->import([$configuration->getUid()]);
         } catch (\Exception $e) {
             $this->addFlashMessage(
                 $e->getMessage(),
@@ -422,7 +397,7 @@ class AdministrationController extends ActionController
 
         $excludeGroups = $this->getExcludeGroups();
 
-        if ($GLOBALS[ 'BE_USER' ]->isAdmin()) {
+        if ($GLOBALS['BE_USER']->isAdmin()) {
             $groups = $this->backendUserGroupRepository->findAll($excludeGroups);
         } else {
             $groups = array_filter($GLOBALS['BE_USER']->userGroups, function ($group) use ($excludeGroups) {
@@ -459,7 +434,7 @@ class AdministrationController extends ActionController
         $menu = $this->moduleTemplate->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
         $menu->setIdentifier('pxa_social_feed');
 
-        $actions = [ 'index', 'editConfiguration', 'editToken' ];
+        $actions = ['index', 'editConfiguration', 'editToken'];
 
         foreach ($actions as $action) {
             $item = $menu->makeMenuItem()

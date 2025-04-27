@@ -51,10 +51,8 @@ class Feed extends AbstractEntity
 
     /**
      * pid
-     *
-     * @var int
      */
-    protected $pid = 0;
+    protected ?int $pid = 0;
 
     /**
      * updateDate

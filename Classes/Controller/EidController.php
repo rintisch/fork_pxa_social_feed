@@ -170,7 +170,7 @@ class EidController
                     'uid' => $tokenUid,
                 ]
             )
-            ->fetch();
+            ->fetchAllAssociative();
 
         if (is_array($row)) {
             return $row;
